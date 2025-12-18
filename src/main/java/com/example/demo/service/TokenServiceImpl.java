@@ -28,13 +28,9 @@ public class TokenServiceImpl implements TokenService {
         ServiceCounter counter = counterRepo.findById(counterId)
                 .orElseThrow(() -> new RuntimeException("Counter not found"));
 
-        if (!counter.isActive()) {
-            throw new RuntimeException("Counter not active");
-        }
-
         Token token = new Token();
-        token.setTokenNumber("TKN-" + System.currentTimeMillis());
-        token.setStatus("ISSUED");
+        token.setTokenNumber("T" + System.currentTimeMillis());
+        token.setStatus("WAITING");
         token.setIssuedAt(LocalDateTime.now());
         token.setServiceCounter(counter);
 
