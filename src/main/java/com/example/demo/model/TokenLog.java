@@ -1,36 +1,35 @@
 package com.example.demo.model;
 
-import com.example.demo.entity.Token; // Correct import for Token
+import com.example.demo.entity.Token;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "token_log")
 public class TokenLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "token_id", nullable = false)
+    @JsonIgnoreProperties({
+        "hibernateLazyInitializer",
+        "handler",
+        "serviceCounter"
+    })
     private Token token;
 
+    @Column(nullable = false)
     private String logMessage;
 
+    @Column(nullable = false)
     private LocalDateTime loggedAt;
 
-    // Default constructor
-    public TokenLog() {
-    }
+    public TokenLog() {}
 
-    // Constructor with parameters
-    public TokenLog(Token token, String logMessage) {
-        this.token = token;
-        this.logMessage = logMessage;
-        this.loggedAt = LocalDateTime.now(); // auto-generate timestamp
-    }
-
-    // ===== Getters & Setters =====
     public Long getId() {
         return id;
     }
