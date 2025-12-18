@@ -17,13 +17,15 @@ public class TokenController {
         this.tokenService = tokenService;
     }
 
-    @PostMapping
-    public Token createToken(@RequestBody Token token) {
-        return tokenService.createToken(token);
+    // Generate token using counter ID
+    @PostMapping("/generate/{counterId}")
+    public Token generateToken(@PathVariable Long counterId) {
+        return tokenService.generateToken(counterId);
     }
 
+    // Get all tokens
     @GetMapping
-    public List<Token> getTokens() {
+    public List<Token> getAllTokens() {
         return tokenService.getAllTokens();
     }
 }
