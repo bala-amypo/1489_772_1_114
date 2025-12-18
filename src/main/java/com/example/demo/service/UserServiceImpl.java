@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.security.MessageDigest;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,6 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Email already exists");
         }
 
-        // Password hashing (NO security layer)
         user.setPassword(hashPassword(user.getPassword()));
 
         if (user.getRole() == null) {
@@ -31,6 +31,11 @@ public class UserServiceImpl implements UserService {
         }
 
         return userRepo.save(user);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepo.findAll();
     }
 
     private String hashPassword(String password) {

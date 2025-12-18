@@ -7,5 +7,5 @@ public interface UserService {
 
     User createUser(User user);
 
-    List<User> getAllUsers();
+    List<User> getAllUsers();   // 👈 MUST exist
 }
