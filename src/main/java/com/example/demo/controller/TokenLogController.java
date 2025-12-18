@@ -6,6 +6,7 @@ import com.example.demo.repository.TokenLogRepository;
 import com.example.demo.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,41 +20,59 @@ public class TokenLogController {
     @Autowired
     private TokenRepository tokenRepository;
 
-    // POST
+ 
     @PostMapping
     public TokenLog createTokenLog(@RequestBody TokenLog tokenLog) {
+
+        if (tokenLog.getToken() == null || tokenLog.getToken().getId() == null) {
+            throw new RuntimeException("Token ID is required");
+        }
+
         Token managedToken = tokenRepository.findById(tokenLog.getToken().getId())
-                .orElseThrow(() -> new RuntimeException("Token not found"));
+                .orElseThrow(() -> new RuntimeException(
+                        "Token not found with id: " + tokenLog.getToken().getId()
+                ));
+
         tokenLog.setToken(managedToken);
         tokenLog.setLoggedAt(LocalDateTime.now());
+
         return tokenLogRepository.save(tokenLog);
     }
 
-    // GET all
+   
     @GetMapping
     public List<TokenLog> getAllTokenLogs() {
         return tokenLogRepository.findAll();
     }
 
-    // GET by id
+ 
     @GetMapping("/{id}")
-    public TokenLog getTokenLog(@PathVariable Long id) {
+    public TokenLog getTokenLogById(@PathVariable Long id) {
         return tokenLogRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("TokenLog not found"));
+                .orElseThrow(() -> new RuntimeException("TokenLog not found with id: " + id));
     }
 
-    // PUT / update
+ 
     @PutMapping("/{id}")
-    public TokenLog updateTokenLog(@PathVariable Long id, @RequestBody TokenLog updatedLog) {
-        TokenLog log = tokenLogRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("TokenLog not found"));
-        log.setLogMessage(updatedLog.getLogMessage());
-        return tokenLogRepository.save(log);
+    public TokenLog updateTokenLog(
+            @PathVariable Long id,
+            @RequestBody TokenLog updatedLog
+    ) {
+        TokenLog existingLog = tokenLogRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("TokenLog not found with id: " + id));
+
+        existingLog.setLogMessage(updatedLog.getLogMessage());
+
+        return tokenLogRepository.save(existingLog);
     }
 
-    // DELETE
     @DeleteMapping("/{id}")
     public String deleteTokenLog(@PathVariable Long id) {
+
+        if (!tokenLogRepository.existsById(id)) {
+            throw new RuntimeException("TokenLog not found with id: " + id);
+        }
+
         tokenLogRepository.deleteById(id);
         return "TokenLog deleted successfully with id " + id;
     }
