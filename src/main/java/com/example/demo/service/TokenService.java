@@ -1,11 +1,12 @@
-package com.example.demo.service;
+@Entity
+public class TokenService {
 
-import java.util.List;
-import com.example.demo.entity.Token;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-public interface TokenService {
+    private String counterName;
+    private boolean active;
 
-    Token generateToken(Long counterId);
-
-    List<Token> getAllTokens();
+    // No need OneToMany now (simple project)
 }
