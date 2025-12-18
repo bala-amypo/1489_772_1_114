@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.example.demo.entity.Token; // Correct import for Token
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -18,10 +19,11 @@ public class TokenLog {
 
     private LocalDateTime loggedAt;
 
-    // Constructor
+    // Default constructor
     public TokenLog() {
     }
 
+    // Constructor with parameters
     public TokenLog(Token token, String logMessage) {
         this.token = token;
         this.logMessage = logMessage;
