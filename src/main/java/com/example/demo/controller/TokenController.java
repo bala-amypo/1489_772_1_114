@@ -1,27 +1,29 @@
 package com.example.demo.controller;
 
 import java.util.List;
+
 import org.springframework.web.bind.annotation.*;
+
 import com.example.demo.entity.Token;
 import com.example.demo.service.TokenService;
 
 @RestController
-@RequestMapping("/token")
+@RequestMapping("/tokens")
 public class TokenController {
 
-    private final TokenService service;
+    private final TokenService tokenService;
 
-    public TokenController(TokenService service) {
-        this.service = service;
+    public TokenController(TokenService tokenService) {
+        this.tokenService = tokenService;
     }
 
-    @PostMapping("/generate/{counterId}")
-    public Token generate(@PathVariable Long counterId) {
-        return service.generateToken(counterId);
+    @PostMapping
+    public Token createToken(@RequestBody Token token) {
+        return tokenService.createToken(token);
     }
 
-    @GetMapping("/all")
-    public List<Token> all() {
-        return service.getAllTokens();
+    @GetMapping
+    public List<Token> getTokens() {
+        return tokenService.getAllTokens();
     }
 }

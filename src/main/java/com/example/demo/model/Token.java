@@ -1,36 +1,69 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+
 @Entity
+@Table(
+    name = "token",
+    uniqueConstraints = @UniqueConstraint(columnNames = "tokenNumber")
+)
 public class Token {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer tokenNumber;
-    private String status;
-    private LocalDateTime createdTime;
+    @Column(nullable = false, unique = true)
+    private String tokenNumber;
 
     @ManyToOne
-    private ServiceCounter counter;
+    @JoinColumn(name = "service_counter_id", nullable = false)
+    private ServiceCounter serviceCounter;
+
+    private String status;
+
+    private LocalDateTime issuedAt;
+
+    private LocalDateTime completedAt;
 
     public Token() {}
 
+    @PrePersist
+    public void onCreate() {
+        this.issuedAt = LocalDateTime.now();
+        if (this.status == null) {
+            this.status = "WAITING";
+        }
+    }
+
+    // Getters & Setters
     public Long getId() { return id; }
+
     public void setId(Long id) { this.id = id; }
 
-    public Integer getTokenNumber() { return tokenNumber; }
-    public void setTokenNumber(Integer tokenNumber) { this.tokenNumber = tokenNumber; }
+    public String getTokenNumber() { return tokenNumber; }
+
+    public void setTokenNumber(String tokenNumber) { this.tokenNumber = tokenNumber; }
+
+    public ServiceCounter getServiceCounter() { return serviceCounter; }
+
+    public void setServiceCounter(ServiceCounter serviceCounter) {
+        this.serviceCounter = serviceCounter;
+    }
 
     public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
 
-    public LocalDateTime getCreatedTime() { return createdTime; }
-    public void setCreatedTime(LocalDateTime createdTime) { this.createdTime = createdTime; }
+    public void setStatus(String status) {
+        this.status = status;
 
-    public ServiceCounter getCounter() { return counter; }
-    public void setCounter(ServiceCounter counter) { this.counter = counter; }
+        if ("COMPLETED".equals(status)) {
+            this.completedAt = LocalDateTime.now();
+        }
+    }
+
+    public LocalDateTime getIssuedAt() { return issuedAt; }
+
+    public LocalDateTime getCompletedAt() { return completedAt; }
 }

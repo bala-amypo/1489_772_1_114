@@ -5,6 +5,7 @@ import com.example.demo.entity.Token;
 
 public interface TokenService {
 
-    Token generateToken(Long counterId);
+    Token createToken(Token token);
+
     List<Token> getAllTokens();
 }
