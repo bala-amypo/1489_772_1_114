@@ -1,28 +1,55 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "queue_position")
 public class QueuePosition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "token_id", nullable = false)
-    private Token token;
+    @Column(name = "token_id", nullable = false)
+    private Long tokenId;
 
+    @Column(nullable = false)
     private Integer position;
 
-    private LocalDateTime updatedAt;
+    @Column(nullable = false)
+    private String status;
 
-    @PrePersist
-    @PreUpdate
-    public void updateTime() {
-        this.updatedAt = LocalDateTime.now();
+    // ✅ Getters and Setters (THIS FIXES YOUR ERROR)
+
+    public Long getId() {
+        return id;
     }
 
-    // getters & setters
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getTokenId() {
+        return tokenId;
+    }
+
+    public void setTokenId(Long tokenId) {
+        this.tokenId = tokenId;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
