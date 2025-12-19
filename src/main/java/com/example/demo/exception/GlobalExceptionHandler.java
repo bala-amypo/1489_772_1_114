@@ -12,24 +12,24 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 🔴 Resource not found
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleNotFound(ResourceNotFoundException ex) {
+    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    // 🔴 Validation errors
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleIllegalState(IllegalStateException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationErrors(
-            MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
 
         Map<String, String> errors = new HashMap<>();
 
-        ex.getBindingResult()
-          .getFieldErrors()
-          .forEach(error ->
-              errors.put(error.getField(), error.getDefaultMessage())
-          );
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage())
+        );
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
