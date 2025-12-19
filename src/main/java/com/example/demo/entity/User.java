@@ -1,9 +1,3 @@
-package com.example.demo.entity;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-
 @Entity
 @Table(name = "users")
 public class User {
@@ -23,36 +17,15 @@ public class User {
     @NotBlank(message = "Role is required")
     private String role;
 
-    // Getters and Setters
-    public Long getUserId() {
-        return userId;
+    // ✅ REQUIRED BY JPA
+    public User() {
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public User(String name, String email, String role) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    
-    public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getRole() {
-        return role;
-    }
-    
-    public void setRole(String role) {
         this.role = role;
     }
+
+    // getters & setters …
 }
