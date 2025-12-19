@@ -1,4 +1,9 @@
+package com.example.demo.entity;
+
+import jakarta.persistence.*;
+
 @Entity
+@Table(name = "service_counter")
 public class ServiceCounter {
 
     @Id
@@ -7,13 +12,26 @@ public class ServiceCounter {
 
     private String counterName;
 
-    private Boolean isActive;
+    private boolean active;
 
-    public Long getId() { return id; }
-    public String getCounterName() { return counterName; }
-    public Boolean getIsActive() { return isActive; }
+    // getters & setters
+    public Long getId() {
+        return id;
+    }
 
-    public void setId(Long id) { this.id = id; }
-    public void setCounterName(String counterName) { this.counterName = counterName; }
-    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public String getCounterName() {
+        return counterName;
+    }
+
+    public void setCounterName(String counterName) {
+        this.counterName = counterName;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }

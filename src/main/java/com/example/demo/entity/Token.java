@@ -1,33 +1,60 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "token")
 public class Token {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String tokenNumber;
 
     private String status;
 
     private LocalDateTime issuedAt;
-    private LocalDateTime completedAt;
 
     @ManyToOne
-    @JoinColumn(name = "counter_id")
-    @JsonIgnoreProperties("tokens")
+    @JoinColumn(name = "service_counter_id")
     private ServiceCounter serviceCounter;
 
-    @PrePersist
-    public void onCreate() {
-        this.issuedAt = LocalDateTime.now();
+    // getters & setters
+    public Long getId() {
+        return id;
     }
 
-    // getters & setters
+    public String getTokenNumber() {
+        return tokenNumber;
+    }
+
+    public void setTokenNumber(String tokenNumber) {
+        this.tokenNumber = tokenNumber;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getIssuedAt() {
+        return issuedAt;
+    }
+
+    public void setIssuedAt(LocalDateTime issuedAt) {
+        this.issuedAt = issuedAt;
+    }
+
+    public ServiceCounter getServiceCounter() {
+        return serviceCounter;
+    }
+
+    public void setServiceCounter(ServiceCounter serviceCounter) {
+        this.serviceCounter = serviceCounter;
+    }
 }
