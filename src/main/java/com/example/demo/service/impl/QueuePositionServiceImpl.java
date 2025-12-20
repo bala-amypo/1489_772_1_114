@@ -12,31 +12,30 @@ import com.example.demo.service.QueuePositionService;
 public class QueuePositionServiceImpl implements QueuePositionService {
 
     @Autowired
-    private QueuePositionRepository queuePositionRepo;
+    private QueuePositionRepository repo;
+
+    @Override
+    public QueuePosition saveQueuePosition(QueuePosition queuePosition) {
+        return repo.save(queuePosition);
+    }
+
+    @Override
+    public List<QueuePosition> getAllQueuePositions() {
+        return repo.findAll();
+    }
 
     @Override
     public QueuePosition getById(Long id) {
-        return queuePositionRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("QueuePosition not found"));
+        return repo.findById(id).orElseThrow(() -> new RuntimeException("QueuePosition not found"));
     }
 
     @Override
     public QueuePosition getByTokenId(Long tokenId) {
-        return queuePositionRepo.findByToken_Id(tokenId);
-    }
-
-    @Override
-    public List<QueuePosition> getAllPositions() {
-        return queuePositionRepo.findAll();
+        return repo.findByToken_Id(tokenId);
     }
 
     @Override
     public void deleteById(Long id) {
-        queuePositionRepo.deleteById(id);
-    }
-
-    @Override
-    public QueuePosition savePosition(QueuePosition position) {
-        return queuePositionRepo.save(position);
+        repo.deleteById(id);
     }
 }

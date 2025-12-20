@@ -2,12 +2,11 @@ package com.example.demo.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 
 import com.example.demo.entity.TokenLog;
 import com.example.demo.repository.TokenLogRepository;
 import com.example.demo.service.TokenLogService;
-
-import java.util.List;
 
 @Service
 public class TokenLogServiceImpl implements TokenLogService {
@@ -22,7 +21,11 @@ public class TokenLogServiceImpl implements TokenLogService {
 
     @Override
     public List<TokenLog> getLogsByTokenId(Long tokenId) {
-        // Use the repository method you defined
         return repo.findByToken_IdOrderByLoggedAtAsc(tokenId);
+    }
+
+    @Override
+    public void deleteLog(Long id) {
+        repo.deleteById(id);
     }
 }

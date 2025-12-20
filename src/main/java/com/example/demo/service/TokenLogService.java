@@ -9,3 +9,5 @@ public interface TokenLogService {
 
     List<TokenLog> getLogsByTokenId(Long tokenId);
 }
+
+
