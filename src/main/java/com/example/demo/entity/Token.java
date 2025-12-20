@@ -19,7 +19,7 @@ public class Token {
     private ServiceCounter serviceCounter;
 
     @Column(nullable = false)
-    private String status; // WAITING / SERVING / COMPLETED / CANCELLED
+    private String status;
 
     @Column(nullable = false)
     private LocalDateTime issuedAt;
@@ -31,5 +31,45 @@ public class Token {
         this.issuedAt = LocalDateTime.now();
     }
 
-    // getters & setters
+    // ✅ GETTERS & SETTERS (VERY IMPORTANT)
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTokenNumber() {
+        return tokenNumber;
+    }
+
+    public void setTokenNumber(String tokenNumber) {
+        this.tokenNumber = tokenNumber;
+    }
+
+    public ServiceCounter getServiceCounter() {
+        return serviceCounter;
+    }
+
+    public void setServiceCounter(ServiceCounter serviceCounter) {
+        this.serviceCounter = serviceCounter;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getIssuedAt() {
+        return issuedAt;
+    }
+
+    public LocalDateTime getCompletedAt() {
+        return completedAt;
+    }
+
+    public void setCompletedAt(LocalDateTime completedAt) {
+        this.completedAt = completedAt;
+    }
 }
