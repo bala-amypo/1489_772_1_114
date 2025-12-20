@@ -1,8 +1,7 @@
-
 package com.example.demo.service.impl;
 
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -17,32 +16,8 @@ public class TokenLogServiceImpl implements TokenLogService {
     private TokenLogRepository repo;
 
     @Override
-    public TokenLog createLog(TokenLog tokenLog) {
+    public TokenLog saveLog(TokenLog tokenLog) {
         return repo.save(tokenLog);
-    }
-
-    @Override
-    public List<TokenLog> getLogsByTokenId(Long tokenId) {
-        return repo.findByTokenId(tokenId);
-    }
-}
-@Service
-public class TokenLogServiceImpl implements TokenLogService {
-
-    @Autowired
-    private TokenLogRepository repo;
-
-    @Autowired
-    private TokenRepository tokenRepo;
-
-    @Override
-    public TokenLog saveLog(TokenLog log) {
-
-        Token token = tokenRepo.findById(log.getTokenId())
-                .orElseThrow(() -> new RuntimeException("Token not found"));
-
-        log.setToken(token);
-        return repo.save(log);
     }
 
     @Override

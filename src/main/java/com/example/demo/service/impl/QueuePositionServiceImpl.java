@@ -1,7 +1,9 @@
 package com.example.demo.service.impl;
 
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import com.example.demo.entity.QueuePosition;
 import com.example.demo.repository.QueuePositionRepository;
@@ -13,18 +15,18 @@ public class QueuePositionServiceImpl implements QueuePositionService {
     @Autowired
     private QueuePositionRepository repo;
 
-    @Autowired
-    private TokenRepository tokenRepo;
-
     @Override
-    public QueuePosition saveQueuePosition(QueuePosition qp) {
-
-        Token token = tokenRepo.findById(qp.getTokenId())
-                .orElseThrow(() -> new RuntimeException("Token not found"));
-
-        qp.setToken(token);
-        return repo.save(qp);
+    public QueuePosition save(QueuePosition position) {
+        return repo.save(position);
     }
 
-    // other methods unchanged
+    @Override
+    public List<QueuePosition> getAll() {
+        return repo.findAll();
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        repo.deleteById(id);
+    }
 }
