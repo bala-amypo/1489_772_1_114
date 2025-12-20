@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Token saveToken(Token token) {
-        ServiceCounter counter = counterRepo.findById(token.getServiceCounter().getId())
+        ServiceCounter counter = counterRepo.findById(token.getServiceCounterId())
                 .orElseThrow(() -> new RuntimeException("Service Counter not found"));
         token.setServiceCounter(counter);
         return repo.save(token);
@@ -34,7 +34,21 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public void deleteToken(Long id) {
-        repo.deleteById(id);
+    public Token updateToken(Long tokenId, Token updatedToken) {
+        Token existing = repo.findById(tokenId)
+                .orElseThrow(() -> new RuntimeException("Token not found"));
+        existing.setTokenNumber(updatedToken.getTokenNumber());
+        // if you want to update service counter:
+        if (updatedToken.getServiceCounterId() != null) {
+            ServiceCounter counter = counterRepo.findById(updatedToken.getServiceCounterId())
+                    .orElseThrow(() -> new RuntimeException("Service Counter not found"));
+            existing.setServiceCounter(counter);
+        }
+        return repo.save(existing);
+    }
+
+    @Override
+    public void deleteToken(Long tokenId) {
+        repo.deleteById(tokenId);
     }
 }
