@@ -26,5 +26,29 @@ public class TokenLog {
         this.loggedAt = LocalDateTime.now();
     }
 
-    // getters & setters
+    // ✅ GETTERS & SETTERS
+
+    public Long getId() {
+        return id;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
+    }
+
+    public String getLogMessage() {
+        return logMessage;
+    }
+
+    public void setLogMessage(String logMessage) {
+        this.logMessage = logMessage;
+    }
+
+    public LocalDateTime getLoggedAt() {
+        return loggedAt;
+    }
 }
