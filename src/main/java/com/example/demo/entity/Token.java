@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,23 +20,29 @@ public class Token {
     private ServiceCounter serviceCounter;
 
     @Column(nullable = false)
-    private String status;   // WAITING / SERVING / COMPLETED / CANCELLED
+    private String status;
 
     @Column(nullable = false)
     private LocalDateTime issuedAt;
 
     private LocalDateTime completedAt;
 
-    // 🔹 Automatically set issuedAt when token is created
-    @PrePersist
-    public void prePersistIssuedAt() {
-        this.issuedAt = LocalDateTime.now();
+    // 👇 For Swagger input ONLY (not stored in DB)
+    @Transient
+    @NotNull(message = "Service Counter ID is required")
+    private Long serviceCounterId;
+
+    public Token() {
     }
 
-    // 🔹 Constructors
-    public Token() {}
+    @PrePersist
+    public void prePersist() {
+        this.issuedAt = LocalDateTime.now();
+        this.status = "WAITING";
+        this.tokenNumber = "TKN-" + System.currentTimeMillis();
+    }
 
-    // 🔹 Getters & Setters
+    // ---------- GETTERS & SETTERS ----------
 
     public Long getId() {
         return id;
@@ -69,7 +76,6 @@ public class Token {
         return issuedAt;
     }
 
-    // ✅ REQUIRED because service calls token.setIssuedAt(...)
     public void setIssuedAt(LocalDateTime issuedAt) {
         this.issuedAt = issuedAt;
     }
@@ -80,5 +86,13 @@ public class Token {
 
     public void setCompletedAt(LocalDateTime completedAt) {
         this.completedAt = completedAt;
+    }
+
+    public Long getServiceCounterId() {
+        return serviceCounterId;
+    }
+
+    public void setServiceCounterId(Long serviceCounterId) {
+        this.serviceCounterId = serviceCounterId;
     }
 }
