@@ -1,6 +1,9 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,18 +18,27 @@ public class TokenLog {
     @JoinColumn(name = "token_id", nullable = false)
     private Token token;
 
+    @NotBlank(message = "Log message is required")
     @Column(nullable = false)
     private String logMessage;
 
     @Column(nullable = false)
     private LocalDateTime loggedAt;
 
+    // 👇 Swagger input ONLY (not stored in DB)
+    @Transient
+    @NotNull(message = "Token ID is required")
+    private Long tokenId;
+
+    public TokenLog() {
+    }
+
     @PrePersist
     public void setLoggedAt() {
         this.loggedAt = LocalDateTime.now();
     }
 
-    // ✅ GETTERS & SETTERS
+    // ---------- GETTERS & SETTERS ----------
 
     public Long getId() {
         return id;
@@ -50,5 +62,13 @@ public class TokenLog {
 
     public LocalDateTime getLoggedAt() {
         return loggedAt;
+    }
+
+    public Long getTokenId() {
+        return tokenId;
+    }
+
+    public void setTokenId(Long tokenId) {
+        this.tokenId = tokenId;
     }
 }
