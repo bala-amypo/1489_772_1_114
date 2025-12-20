@@ -19,19 +19,23 @@ public class Token {
     private ServiceCounter serviceCounter;
 
     @Column(nullable = false)
-    private String status;
+    private String status;   // WAITING / SERVING / COMPLETED / CANCELLED
 
     @Column(nullable = false)
     private LocalDateTime issuedAt;
 
     private LocalDateTime completedAt;
 
+    // 🔹 Automatically set issuedAt when token is created
     @PrePersist
-    public void setIssuedAt() {
+    public void prePersistIssuedAt() {
         this.issuedAt = LocalDateTime.now();
     }
 
-    // ✅ GETTERS & SETTERS (VERY IMPORTANT)
+    // 🔹 Constructors
+    public Token() {}
+
+    // 🔹 Getters & Setters
 
     public Long getId() {
         return id;
@@ -63,6 +67,11 @@ public class Token {
 
     public LocalDateTime getIssuedAt() {
         return issuedAt;
+    }
+
+    // ✅ REQUIRED because service calls token.setIssuedAt(...)
+    public void setIssuedAt(LocalDateTime issuedAt) {
+        this.issuedAt = issuedAt;
     }
 
     public LocalDateTime getCompletedAt() {
