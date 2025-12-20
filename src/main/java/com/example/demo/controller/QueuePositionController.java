@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class QueuePositionController {
     private QueuePositionService service;
 
     @PostMapping
-    public QueuePosition create(@RequestBody QueuePosition qp) {
+    public QueuePosition create(@Valid @RequestBody QueuePosition qp) {
         return service.saveQueuePosition(qp);
     }
 
