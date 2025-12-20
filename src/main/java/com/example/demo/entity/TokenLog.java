@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "token_logs")
+@Table(name = "token_log")
 public class TokenLog {
 
     @Id
@@ -22,25 +22,14 @@ public class TokenLog {
     private LocalDateTime loggedAt;
 
     @PrePersist
-    public void prePersist() {
-        loggedAt = LocalDateTime.now();
+    public void setLoggedAt() {
+        this.loggedAt = LocalDateTime.now();
     }
 
-    // Constructors
     public TokenLog() {}
 
-    public TokenLog(Token token, String logMessage) {
-        this.token = token;
-        this.logMessage = logMessage;
-    }
-
-    // Getters and Setters
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Token getToken() {
@@ -61,9 +50,5 @@ public class TokenLog {
 
     public LocalDateTime getLoggedAt() {
         return loggedAt;
-    }
-
-    public void setLoggedAt(LocalDateTime loggedAt) {
-        this.loggedAt = loggedAt;
     }
 }

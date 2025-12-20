@@ -5,13 +5,7 @@ import java.util.List;
 
 public interface TokenLogService {
 
-    TokenLog saveTokenLog(TokenLog tokenLog);
-
-    List<TokenLog> getAllTokenLogs();
-
-    TokenLog getTokenLogById(Long id);
-
-    void deleteTokenLog(Long id);
+    TokenLog saveLog(TokenLog tokenLog);
 
     List<TokenLog> getLogsByTokenId(Long tokenId);
 }
