@@ -11,27 +11,51 @@ public class ServiceCounter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Counter name is required")
     @Column(nullable = false)
     private String counterName;
 
-    @NotBlank
+    @NotBlank(message = "Department is required")
     @Column(nullable = false)
     private String department;
 
     @Column(nullable = false)
     private Boolean isActive = true;
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public ServiceCounter() {
+    }
 
-    public String getCounterName() { return counterName; }
-    public void setCounterName(String counterName) { this.counterName = counterName; }
+    // ---------- GETTERS & SETTERS ----------
 
-    public String getDepartment() { return department; }
-    public void setDepartment(String department) { this.department = department; }
+    public Long getId() {
+        return id;
+    }
 
-    public Boolean getIsActive() { return isActive; }
-    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCounterName() {
+        return counterName;
+    }
+
+    public void setCounterName(String counterName) {
+        this.counterName = counterName;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
 }

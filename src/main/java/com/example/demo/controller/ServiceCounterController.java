@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.entity.ServiceCounter;
@@ -14,7 +15,7 @@ public class ServiceCounterController {
     private ServiceCounterService service;
 
     @PostMapping
-    public ServiceCounter createCounter(@RequestBody ServiceCounter counter) {
+    public ServiceCounter createCounter(@Valid @RequestBody ServiceCounter counter) {
         return service.save(counter);
     }
 

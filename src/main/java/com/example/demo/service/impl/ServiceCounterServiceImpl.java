@@ -25,11 +25,18 @@ public class ServiceCounterServiceImpl implements ServiceCounterService {
 
     @Override
     public ServiceCounter getById(Long id) {
-        return repo.findById(id).orElse(null);
+        return repo.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("ServiceCounter not found with id: " + id)
+                );
     }
 
     @Override
     public void delete(Long id) {
-        repo.deleteById(id);
+        ServiceCounter counter = repo.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("ServiceCounter not found with id: " + id)
+                );
+        repo.delete(counter);
     }
 }
