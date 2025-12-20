@@ -15,23 +15,8 @@ public class TokenLogServiceImpl implements TokenLogService {
     private TokenLogRepository tokenLogRepository;
 
     @Override
-    public TokenLog saveTokenLog(TokenLog tokenLog) {
+    public TokenLog saveLog(TokenLog tokenLog) {
         return tokenLogRepository.save(tokenLog);
-    }
-
-    @Override
-    public List<TokenLog> getAllTokenLogs() {
-        return tokenLogRepository.findAll();
-    }
-
-    @Override
-    public TokenLog getTokenLogById(Long id) {
-        return tokenLogRepository.findById(id).orElse(null);
-    }
-
-    @Override
-    public void deleteTokenLog(Long id) {
-        tokenLogRepository.deleteById(id);
     }
 
     @Override
