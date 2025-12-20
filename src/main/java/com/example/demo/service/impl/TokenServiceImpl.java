@@ -2,7 +2,6 @@ package com.example.demo.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 
 import com.example.demo.entity.Token;
@@ -24,6 +23,7 @@ public class TokenServiceImpl implements TokenService {
     public Token saveToken(Token token) {
         ServiceCounter counter = counterRepo.findById(token.getServiceCounterId())
                 .orElseThrow(() -> new RuntimeException("Service Counter not found"));
+
         token.setServiceCounter(counter);
         return repo.save(token);
     }
@@ -34,21 +34,23 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Token updateToken(Long tokenId, Token updatedToken) {
-        Token existing = repo.findById(tokenId)
+    public Token getTokenById(Long id) {
+        return repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Token not found"));
-        existing.setTokenNumber(updatedToken.getTokenNumber());
-        // if you want to update service counter:
-        if (updatedToken.getServiceCounterId() != null) {
-            ServiceCounter counter = counterRepo.findById(updatedToken.getServiceCounterId())
-                    .orElseThrow(() -> new RuntimeException("Service Counter not found"));
-            existing.setServiceCounter(counter);
-        }
+    }
+
+    @Override
+    public Token updateToken(Long id, Token token) {
+        Token existing = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Token not found"));
+
+        existing.setTokenNumber(token.getTokenNumber());
+        existing.setServiceCounter(token.getServiceCounter());
         return repo.save(existing);
     }
 
     @Override
-    public void deleteToken(Long tokenId) {
-        repo.deleteById(tokenId);
+    public void deleteToken(Long id) {
+        repo.deleteById(id);
     }
 }
