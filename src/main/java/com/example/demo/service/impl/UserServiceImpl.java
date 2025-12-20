@@ -17,6 +17,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
+
+        // Email uniqueness check
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalStateException("Email already exists");
+        }
+
+        // Simple password hashing (no security as per syllabus)
+        user.setPassword(String.valueOf(user.getPassword().hashCode()));
+
         return userRepository.save(user);
     }
 
@@ -27,7 +36,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
+
         return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found with id: " + id)
+                );
     }
 }
