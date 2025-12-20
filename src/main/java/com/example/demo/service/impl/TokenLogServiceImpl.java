@@ -1,39 +1,24 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.Token;
-import com.example.demo.entity.TokenLog;
-import com.example.demo.repository.TokenLogRepository;
-import com.example.demo.repository.TokenRepository;
-import com.example.demo.service.TokenLogService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
 public class TokenLogServiceImpl implements TokenLogService {
 
     @Autowired
-    private TokenLogRepository tokenLogRepository;
+    private TokenLogRepository repo;
 
     @Autowired
-    private TokenRepository tokenRepository;
+    private TokenRepository tokenRepo;
 
     @Override
-    public TokenLog saveLog(TokenLog tokenLog) {
+    public TokenLog saveLog(TokenLog log) {
 
-        Token token = tokenRepository.findById(tokenLog.getTokenId())
-                .orElseThrow(() ->
-                        new RuntimeException("Token not found with id: " + tokenLog.getTokenId())
-                );
+        Token token = tokenRepo.findById(log.getTokenId())
+                .orElseThrow(() -> new RuntimeException("Token not found"));
 
-        tokenLog.setToken(token);
-        return tokenLogRepository.save(tokenLog);
+        log.setToken(token);
+        return repo.save(log);
     }
 
     @Override
     public List<TokenLog> getLogsByTokenId(Long tokenId) {
-        return tokenLogRepository.findByToken_IdOrderByLoggedAtAsc(tokenId);
+        return repo.findByToken_IdOrderByLoggedAtAsc(tokenId);
     }
 }

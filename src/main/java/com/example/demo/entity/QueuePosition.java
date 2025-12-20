@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,19 +15,15 @@ public class QueuePosition {
     @JoinColumn(name = "token_id", nullable = false)
     private Token token;
 
+    // Used ONLY for input (Swagger / JSON)
+    @Transient
+    private Long tokenId;
+
     @Column(nullable = false)
     private Integer position;
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
-
-    // 👇 Swagger input only (NOT stored in DB)
-    @Transient
-    @NotNull(message = "Token ID is required")
-    private Long tokenId;
-
-    public QueuePosition() {
-    }
 
     @PrePersist
     @PreUpdate
@@ -36,7 +31,7 @@ public class QueuePosition {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // ---------- GETTERS & SETTERS ----------
+    // ---------------- GETTERS & SETTERS ----------------
 
     public Long getId() {
         return id;
@@ -50,6 +45,14 @@ public class QueuePosition {
         this.token = token;
     }
 
+    public Long getTokenId() {
+        return tokenId;
+    }
+
+    public void setTokenId(Long tokenId) {
+        this.tokenId = tokenId;
+    }
+
     public Integer getPosition() {
         return position;
     }
@@ -60,13 +63,5 @@ public class QueuePosition {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
-    }
-
-    public Long getTokenId() {
-        return tokenId;
-    }
-
-    public void setTokenId(Long tokenId) {
-        this.tokenId = tokenId;
     }
 }
