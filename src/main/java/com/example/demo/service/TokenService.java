@@ -1,21 +1,17 @@
 package com.example.demo.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 import com.example.demo.entity.Token;
-import com.example.demo.repository.TokenRepository;
-import java.time.LocalDateTime;
 
-@Service
-public class TokenService {
+public interface TokenService {
 
-    private final TokenRepository repo;
+    Token create(Token token);
 
-    public TokenService(TokenRepository repo) {
-        this.repo = repo;
-    }
+    List<Token> getAll();
 
-    public Token save(Token token) {
-        token.setIssuedAt(LocalDateTime.now());
-        return repo.save(token);
-    }
+    Token getById(Long id);
+
+    Token update(Long id, Token token);
+
+    void delete(Long id);
 }
