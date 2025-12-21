@@ -1,5 +1,9 @@
+package com.example.demo.entity;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "queue_position")
 public class QueuePosition {
 
     @Id
@@ -10,21 +14,13 @@ public class QueuePosition {
     @JoinColumn(name = "token_id", nullable = false)
     private Token token;
 
-    @Column(nullable = false)
     private Integer position;
 
-    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @PrePersist
-    @PreUpdate
-    public void setUpdatedAt() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    /* GETTERS & SETTERS */
-
+    // getters & setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public Token getToken() { return token; }
     public void setToken(Token token) { this.token = token; }
@@ -33,4 +29,5 @@ public class QueuePosition {
     public void setPosition(Integer position) { this.position = position; }
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

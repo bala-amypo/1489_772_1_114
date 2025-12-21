@@ -7,4 +7,3 @@ public interface QueuePositionRepository extends JpaRepository<QueuePosition, Lo
 
     QueuePosition findByToken_Id(Long tokenId);
 }
-
