@@ -34,17 +34,18 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Token getTokenById(Long id) {
-        return repo.findById(id).orElseThrow(() -> new RuntimeException("Token not found"));
+        return repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Token not found"));
     }
 
     @Override
-    public Token updateToken(Long id, Token tokenDetails) {
-        Token existingToken = repo.findById(id)
+    public Token updateToken(Long id, Token token) {
+        Token existing = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Token not found"));
-        // Update fields as needed
-        existingToken.setTokenNumber(tokenDetails.getTokenNumber());
-        existingToken.setServiceCounter(tokenDetails.getServiceCounter());
-        return repo.save(existingToken);
+        existing.setTokenNumber(token.getTokenNumber());
+        existing.setStatus(token.getStatus());
+        existing.setServiceCounter(token.getServiceCounter());
+        return repo.save(existing);
     }
 
     @Override
