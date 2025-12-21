@@ -1,12 +1,21 @@
 package com.example.demo.service;
 
+import org.springframework.stereotype.Service;
 import com.example.demo.entity.QueuePosition;
-import java.util.List;
+import com.example.demo.repository.QueuePositionRepository;
+import java.time.LocalDateTime;
 
-public interface QueuePositionService {
-    QueuePosition createQueuePosition(QueuePosition queue);
-    QueuePosition getQueuePosition(Long id);
-    List<QueuePosition> getAllQueuePositions();
-    QueuePosition updateQueuePosition(Long id, QueuePosition queue);
-    void deleteQueuePosition(Long id);
+@Service
+public class QueuePositionService {
+
+    private final QueuePositionRepository repo;
+
+    public QueuePositionService(QueuePositionRepository repo) {
+        this.repo = repo;
+    }
+
+    public QueuePosition  save(QueuePosition q) {
+        q.setUpdatedAt(LocalDateTime.now());
+        return repo.save(q);
+    }
 }
