@@ -1,13 +1,12 @@
 package com.example.demo.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.example.demo.entity.QueuePosition;
 import com.example.demo.entity.Token;
 import com.example.demo.repository.QueuePositionRepository;
 import com.example.demo.repository.TokenRepository;
 import com.example.demo.service.QueuePositionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -22,13 +21,18 @@ public class QueuePositionServiceImpl implements QueuePositionService {
 
     @Override
     public QueuePosition saveQueuePosition(QueuePosition queuePosition) {
-        // If queuePosition has a tokenId, fetch the token and set it
-        if (queuePosition.getTokenId() != null) {
-            Token token = tokenRepo.findById(queuePosition.getTokenId())
+        // Link Token entity if token is provided
+        if (queuePosition.getToken() != null && queuePosition.getToken().getId() != null) {
+            Token token = tokenRepo.findById(queuePosition.getToken().getId())
                     .orElseThrow(() -> new RuntimeException("Token not found"));
             queuePosition.setToken(token);
         }
         return repo.save(queuePosition);
+    }
+
+    @Override
+    public List<QueuePosition> getAllQueuePositions() {
+        return repo.findAll();
     }
 
     @Override
@@ -43,30 +47,23 @@ public class QueuePositionServiceImpl implements QueuePositionService {
     }
 
     @Override
-    public List<QueuePosition> getAllQueuePositions() {
-        return repo.findAll();
-    }
-
-    @Override
     public QueuePosition updateQueuePosition(Long id, QueuePosition updatedQueue) {
-        QueuePosition existing = repo.findById(id)
+        QueuePosition existingQueue = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("QueuePosition not found"));
 
-        if (updatedQueue.getTokenId() != null) {
-            Token token = tokenRepo.findById(updatedQueue.getTokenId())
-                    .orElseThrow(() -> new RuntimeException("Token not found"));
-            existing.setToken(token);
-        }
-        existing.setPosition(updatedQueue.getPosition());
-        existing.setUpdatedAt(updatedQueue.getUpdatedAt());
+        existingQueue.setPosition(updatedQueue.getPosition());
 
-        return repo.save(existing);
+        if (updatedQueue.getToken() != null && updatedQueue.getToken().getId() != null) {
+            Token token = tokenRepo.findById(updatedQueue.getToken().getId())
+                    .orElseThrow(() -> new RuntimeException("Token not found"));
+            existingQueue.setToken(token);
+        }
+
+        return repo.save(existingQueue);
     }
 
     @Override
     public void deleteById(Long id) {
-        QueuePosition existing = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("QueuePosition not found"));
-        repo.delete(existing);
+        repo.deleteById(id);
     }
 }
