@@ -1,15 +1,36 @@
+package com.example.demo.controller;
+
+import com.example.demo.entity.QueuePosition;
+import com.example.demo.service.QueuePositionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
-@RequestMapping("/queue")
+@RequestMapping("/queue-positions")
 public class QueuePositionController {
 
     @Autowired
-    private QueuePositionService service;
+    private QueuePositionService queueService;
 
     @PostMapping
-    public QueuePosition create(
-            @RequestParam Long tokenId,
-            @RequestParam Integer position) {
+    public QueuePosition addQueuePosition(@RequestBody QueuePosition queue) {
+        return queueService.saveQueuePosition(queue);
+    }
 
-        return service.createQueue(tokenId, position);
+    @GetMapping
+    public List<QueuePosition> getAllQueuePositions() {
+        return queueService.getAllQueuePositions();
+    }
+
+    @GetMapping("/{id}")
+    public QueuePosition getQueueById(@PathVariable Long id) {
+        return queueService.getById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteQueue(@PathVariable Long id) {
+        queueService.deleteById(id);
     }
 }
