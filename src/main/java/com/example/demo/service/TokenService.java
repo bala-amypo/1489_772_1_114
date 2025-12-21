@@ -1,12 +1,25 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Token;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public interface TokenService {
-    Token createToken(Token token);
-    Token getToken(Long id);
-    List<Token> getAllTokens();
-    Token updateToken(Long id, Token token);
-    void deleteToken(Long id);
+import com.example.demo.entity.Token;
+import com.example.demo.repository.TokenRepository;
+
+import java.time.LocalDateTime;
+
+@Service
+public class TokenService {
+
+    @Autowired
+    private TokenRepository tokenRepository;
+
+    public Token createToken(Token token) {
+        token.setIssuedAt(LocalDateTime.now());
+        return tokenRepository.save(token);
+    }
+
+    public Token getToken(Long id) {
+        return tokenRepository.findById(id).orElse(null);
+    }
 }
