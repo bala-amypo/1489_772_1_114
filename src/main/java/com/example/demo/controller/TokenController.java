@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import com.example.demo.entity.Token;
 import com.example.demo.service.TokenService;
 
@@ -10,16 +8,14 @@ import com.example.demo.service.TokenService;
 @RequestMapping("/tokens")
 public class TokenController {
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService service;
 
-    @PostMapping
-    public Token createToken(@RequestBody Token token) {
-        return tokenService.createToken(token);
+    public TokenController(TokenService service) {
+        this.service = service;
     }
 
-    @GetMapping("/{id}")
-    public Token getToken(@PathVariable Long id) {
-        return tokenService.getToken(id);
+    @PostMapping
+    public Token create(@RequestBody Token token) {
+        return service.save(token);
     }
 }

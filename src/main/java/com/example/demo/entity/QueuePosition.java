@@ -10,22 +10,18 @@ public class QueuePosition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "token_id")
-    private Token token;
-
-    private int position;
+    private Long tokenId;
+    private Integer position;
     private LocalDateTime updatedAt;
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Token getToken() { return token; }
-    public void setToken(Token token) { this.token = token; }
+    public Long getTokenId() { return tokenId; }
+    public void setTokenId(Long tokenId) { this.tokenId = tokenId; }
 
-    public int getPosition() { return position; }
-    public void setPosition(int position) { this.position = position; }
+    public Integer getPosition() { return position; }
+    public void setPosition(Integer position) { this.position = position; }
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
