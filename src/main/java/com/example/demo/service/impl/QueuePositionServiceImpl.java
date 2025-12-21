@@ -34,4 +34,10 @@ public class QueuePositionServiceImpl implements QueuePositionService {
     public void deleteById(Long id) {
         repo.deleteById(id);
     }
+
+    @Override
+    public QueuePosition getByTokenId(Long tokenId) {
+        return repo.findByToken_Id(tokenId)
+                .orElseThrow(() -> new RuntimeException("QueuePosition for Token not found"));
+    }
 }

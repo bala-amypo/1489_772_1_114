@@ -1,21 +1,12 @@
 package com.example.demo.service;
 
-import java.util.List;
 import com.example.demo.entity.QueuePosition;
+import java.util.List;
 
 public interface QueuePositionService {
-
-    QueuePosition saveQueuePosition(QueuePosition qp);
-
+    QueuePosition saveQueuePosition(QueuePosition queue);
     List<QueuePosition> getAllQueuePositions();
-
     QueuePosition getById(Long id);
-
-    QueuePosition getByTokenId(Long tokenId);
-
     void deleteById(Long id);
-}
-
-public interface QueuePositionService {
-    QueuePosition createQueue(Long tokenId, Integer position);
+    QueuePosition getByTokenId(Long tokenId); // must be implemented
 }
