@@ -1,51 +1,41 @@
 package com.example.demo.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import com.example.demo.entity.TokenLog;
 import com.example.demo.repository.TokenLogRepository;
-import com.example.demo.repository.TokenRepository;
 import com.example.demo.service.TokenLogService;
-import com.example.demo.entity.Token;
-import java.util.List;
 
 @Service
 public class TokenLogServiceImpl implements TokenLogService {
 
-    private final TokenLogRepository logRepo;
-    private final TokenRepository tokenRepo;
+    private final TokenLogRepository repo;
 
-    @Autowired
-    public TokenLogServiceImpl(TokenLogRepository logRepo, TokenRepository tokenRepo) {
-        this.logRepo = logRepo;
-        this.tokenRepo = tokenRepo;
+    public TokenLogServiceImpl(TokenLogRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public TokenLog createLog(TokenLog log) {
-        Token token = tokenRepo.findById(log.getToken().getId())
-                .orElseThrow(() -> new RuntimeException("Token not found"));
-        log.setToken(token);
-        return logRepo.save(log);
+    public TokenLog create(TokenLog log) {
+        log.setCreatedAt(LocalDateTime.now());
+        return repo.save(log);
     }
 
     @Override
-    public TokenLog getLog(Long id) {
-        return logRepo.findById(id).orElseThrow(() -> new RuntimeException("TokenLog not found"));
+    public List<TokenLog> getAll() {
+        return repo.findAll();
     }
 
     @Override
-    public List<TokenLog> getAllLogs() {
-        return logRepo.findAll();
+    public TokenLog getById(Long id) {
+        return repo.findById(id).orElse(null);
     }
 
     @Override
-    public List<TokenLog> getLogsByToken(Long tokenId) {
-        return logRepo.findByToken_IdOrderByLoggedAtAsc(tokenId);
-    }
-
-    @Override
-    public void deleteLog(Long id) {
-        logRepo.deleteById(id);
+    public void delete(Long id) {
+        repo.deleteById(id);
     }
 }
