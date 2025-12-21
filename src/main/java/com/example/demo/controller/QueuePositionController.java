@@ -8,14 +8,14 @@ import com.example.demo.service.QueuePositionService;
 @RequestMapping("/queue")
 public class QueuePositionController {
 
-    private final QueueService service;
+    private final QueuePositionService service;
 
-    public QueueController(QueueService service) {
+    public QueuePositionController(QueuePositionService service) {
         this.service = service;
     }
 
     @PostMapping
-    public QueueEntity create(@RequestBody QueueEntity q) {
+    public QueuePosition create(@RequestBody QueuePosition q) {
         return service.save(q);
     }
 }

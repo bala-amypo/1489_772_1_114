@@ -10,28 +10,19 @@ public class TokenLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "token_id")
-    private Token token;
+    private Long tokenId;
+    private String action;
+    private LocalDateTime actionTime;
 
-    private String logMessage;
-    private LocalDateTime loggedAt;
-
-    @PrePersist
-    public void prePersist() {
-        loggedAt = LocalDateTime.now();
-    }
-
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Token getToken() { return token; }
-    public void setToken(Token token) { this.token = token; }
+    public Long getTokenId() { return tokenId; }
+    public void setTokenId(Long tokenId) { this.tokenId = tokenId; }
 
-    public String getLogMessage() { return logMessage; }
-    public void setLogMessage(String logMessage) { this.logMessage = logMessage; }
+    public String getAction() { return action; }
+    public void setAction(String action) { this.action = action; }
 
-    public LocalDateTime getLoggedAt() { return loggedAt; }
-    public void setLoggedAt(LocalDateTime loggedAt) { this.loggedAt = loggedAt; }
+    public LocalDateTime getActionTime() { return actionTime; }
+    public void setActionTime(LocalDateTime actionTime) { this.actionTime = actionTime; }
 }

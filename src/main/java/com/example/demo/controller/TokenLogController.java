@@ -1,44 +1,21 @@
 package com.example.demo.controller;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demo.entity.TokenLog;
 import com.example.demo.service.TokenLogService;
-import java.util.List;
 
 @RestController
-@RequestMapping("/logs")
+@RequestMapping("/tokenlogs")
 public class TokenLogController {
 
-    private final TokenLogService logService;
+    private final TokenLogService service;
 
-    @Autowired
-    public TokenLogController(TokenLogService logService) {
-        this.logService = logService;
+    public TokenLogController(TokenLogService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public TokenLog createLog(@RequestBody TokenLog log) {
-        return logService.createLog(log);
-    }
-
-    @GetMapping("/{id}")
-    public TokenLog getLog(@PathVariable Long id) {
-        return logService.getLog(id);
-    }
-
-    @GetMapping
-    public List<TokenLog> getAllLogs() {
-        return logService.getAllLogs();
-    }
-
-    @GetMapping("/token/{tokenId}")
-    public List<TokenLog> getLogsByToken(@PathVariable Long tokenId) {
-        return logService.getLogsByToken(tokenId);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteLog(@PathVariable Long id) {
-        logService.deleteLog(id);
+    public TokenLog create(@RequestBody TokenLog log) {
+        return service.save(log);
     }
 }
