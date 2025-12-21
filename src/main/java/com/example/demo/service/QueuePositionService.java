@@ -15,3 +15,7 @@ public interface QueuePositionService {
 
     void deleteById(Long id);
 }
+
+public interface QueuePositionService {
+    QueuePosition createQueue(Long tokenId, Integer position);
+}
