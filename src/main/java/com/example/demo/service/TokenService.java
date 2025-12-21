@@ -4,9 +4,9 @@ import com.example.demo.entity.Token;
 import java.util.List;
 
 public interface TokenService {
-    Token saveToken(Token token);
+    Token createToken(Token token);
+    Token getToken(Long id);
     List<Token> getAllTokens();
-    Token getTokenById(Long id);  // <-- needed for GET by ID
-    Token updateToken(Long id, Token token); // optional for PUT
-    void deleteToken(Long id);    // optional for DELETE
+    Token updateToken(Long id, Token token);
+    void deleteToken(Long id);
 }

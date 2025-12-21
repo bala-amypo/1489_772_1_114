@@ -1,52 +1,44 @@
 package com.example.demo.controller;
 
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demo.entity.Token;
 import com.example.demo.service.TokenService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/tokens")
 public class TokenController {
 
+    private final TokenService tokenService;
+
     @Autowired
-    private TokenService tokenService;
+    public TokenController(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
 
-    // Create a new token
     @PostMapping
-    public ResponseEntity<Token> createToken(@RequestBody Token token) {
-        Token savedToken = tokenService.saveToken(token);
-        return ResponseEntity.ok(savedToken);
+    public Token createToken(@RequestBody Token token) {
+        return tokenService.createToken(token);
     }
 
-    // Get all tokens
-    @GetMapping
-    public ResponseEntity<List<Token>> getAllTokens() {
-        List<Token> tokens = tokenService.getAllTokens();
-        return ResponseEntity.ok(tokens);
-    }
-
-    // Get a token by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Token> getTokenById(@PathVariable Long id) {
-        Token token = tokenService.getTokenById(id);
-        return ResponseEntity.ok(token);
+    public Token getToken(@PathVariable Long id) {
+        return tokenService.getToken(id);
     }
 
-    // Update a token
+    @GetMapping
+    public List<Token> getAllTokens() {
+        return tokenService.getAllTokens();
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Token> updateToken(@PathVariable Long id, @RequestBody Token token) {
-        Token updatedToken = tokenService.updateToken(id, token);
-        return ResponseEntity.ok(updatedToken);
+    public Token updateToken(@PathVariable Long id, @RequestBody Token token) {
+        return tokenService.updateToken(id, token);
     }
 
-    // Delete a token
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteToken(@PathVariable Long id) {
+    public void deleteToken(@PathVariable Long id) {
         tokenService.deleteToken(id);
-        return ResponseEntity.ok("Token deleted successfully with id: " + id);
     }
 }

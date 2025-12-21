@@ -2,54 +2,55 @@ package com.example.demo.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.List;
-
 import com.example.demo.entity.Token;
-import com.example.demo.entity.ServiceCounter;
 import com.example.demo.repository.TokenRepository;
 import com.example.demo.repository.ServiceCounterRepository;
 import com.example.demo.service.TokenService;
+import com.example.demo.entity.ServiceCounter;
+import java.util.List;
 
 @Service
 public class TokenServiceImpl implements TokenService {
 
-    @Autowired
-    private TokenRepository repo;
+    private final TokenRepository tokenRepo;
+    private final ServiceCounterRepository counterRepo;
 
     @Autowired
-    private ServiceCounterRepository counterRepo;
+    public TokenServiceImpl(TokenRepository tokenRepo, ServiceCounterRepository counterRepo) {
+        this.tokenRepo = tokenRepo;
+        this.counterRepo = counterRepo;
+    }
 
     @Override
-    public Token saveToken(Token token) {
-        ServiceCounter counter = counterRepo.findById(token.getServiceCounterId())
+    public Token createToken(Token token) {
+        ServiceCounter counter = counterRepo.findById(token.getServiceCounter().getId())
                 .orElseThrow(() -> new RuntimeException("Service Counter not found"));
         token.setServiceCounter(counter);
-        return repo.save(token);
+        return tokenRepo.save(token);
+    }
+
+    @Override
+    public Token getToken(Long id) {
+        return tokenRepo.findById(id).orElseThrow(() -> new RuntimeException("Token not found"));
     }
 
     @Override
     public List<Token> getAllTokens() {
-        return repo.findAll();
-    }
-
-    @Override
-    public Token getTokenById(Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Token not found"));
+        return tokenRepo.findAll();
     }
 
     @Override
     public Token updateToken(Long id, Token token) {
-        Token existing = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Token not found"));
+        Token existing = getToken(id);
         existing.setTokenNumber(token.getTokenNumber());
         existing.setStatus(token.getStatus());
-        existing.setServiceCounter(token.getServiceCounter());
-        return repo.save(existing);
+        existing.setIssuedAt(token.getIssuedAt());
+        existing.setCompletedAt(token.getCompletedAt());
+        return tokenRepo.save(existing);
     }
 
     @Override
     public void deleteToken(Long id) {
-        repo.deleteById(id);
+        tokenRepo.deleteById(id);
     }
 }
