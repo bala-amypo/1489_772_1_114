@@ -23,9 +23,4 @@ public class TokenLogServiceImpl implements TokenLogService {
     public List<TokenLog> getLogsByTokenId(Long tokenId) {
         return repo.findByToken_IdOrderByLoggedAtAsc(tokenId);
     }
-
-    @Override
-    public void deleteLog(Long id) {
-        repo.deleteById(id);
-    }
 }
