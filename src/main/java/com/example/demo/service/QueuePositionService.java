@@ -4,16 +4,9 @@ import com.example.demo.entity.QueuePosition;
 import java.util.List;
 
 public interface QueuePositionService {
-
-    QueuePosition saveQueuePosition(QueuePosition queuePosition);
-
+    QueuePosition createQueuePosition(QueuePosition queue);
+    QueuePosition getQueuePosition(Long id);
     List<QueuePosition> getAllQueuePositions();
-
-    QueuePosition getById(Long id);
-
-    QueuePosition getByTokenId(Long tokenId);
-
-    QueuePosition updateQueuePosition(Long id, QueuePosition queuePosition);
-
-    void deleteById(Long id);
+    QueuePosition updateQueuePosition(Long id, QueuePosition queue);
+    void deleteQueuePosition(Long id);
 }

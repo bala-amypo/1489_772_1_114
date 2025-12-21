@@ -1,44 +1,32 @@
-package com.example.demo.controller;
+package com.example.demo.entity;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.example.demo.entity.Token;
-import com.example.demo.service.TokenService;
-import java.util.List;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-@RestController
-@RequestMapping("/tokens")
-public class TokenController {
+@Entity
+public class QueuePosition {
 
-    private final TokenService tokenService;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Autowired
-    public TokenController(TokenService tokenService) {
-        this.tokenService = tokenService;
-    }
+    @ManyToOne
+    @JoinColumn(name = "token_id")
+    private Token token;
 
-    @PostMapping
-    public Token createToken(@RequestBody Token token) {
-        return tokenService.createToken(token);
-    }
+    private int position;
+    private LocalDateTime updatedAt;
 
-    @GetMapping("/{id}")
-    public Token getToken(@PathVariable Long id) {
-        return tokenService.getToken(id);
-    }
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    @GetMapping
-    public List<Token> getAllTokens() {
-        return tokenService.getAllTokens();
-    }
+    public Token getToken() { return token; }
+    public void setToken(Token token) { this.token = token; }
 
-    @PutMapping("/{id}")
-    public Token updateToken(@PathVariable Long id, @RequestBody Token token) {
-        return tokenService.updateToken(id, token);
-    }
+    public int getPosition() { return position; }
+    public void setPosition(int position) { this.position = position; }
 
-    @DeleteMapping("/{id}")
-    public void deleteToken(@PathVariable Long id) {
-        tokenService.deleteToken(id);
-    }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

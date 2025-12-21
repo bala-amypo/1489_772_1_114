@@ -11,14 +11,18 @@ public class TokenLog {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "token_id", nullable = false)
+    @JoinColumn(name = "token_id")
     private Token token;
 
     private String logMessage;
-
     private LocalDateTime loggedAt;
 
-    // getters & setters
+    @PrePersist
+    public void prePersist() {
+        loggedAt = LocalDateTime.now();
+    }
+
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
