@@ -1,17 +1,12 @@
 package com.example.demo.service;
 
-import java.util.List;
 import com.example.demo.entity.Token;
 
 public interface TokenService {
 
-    Token create(Token token);
+    Token issueToken(Long counterId);
 
-    List<Token> getAll();
+    Token updateStatus(Long tokenId, String status);
 
-    Token getById(Long id);
-
-    Token update(Long id, Token token);
-
-    void delete(Long id);
+    Token getToken(Long tokenId);
 }
