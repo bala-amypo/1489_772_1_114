@@ -26,20 +26,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(String email, String password) {
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalStateException("Invalid credentials");
-        }
-
-        return user;
-    }
-
-    // ⭐⭐⭐ THIS METHOD WAS MISSING
-    @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
