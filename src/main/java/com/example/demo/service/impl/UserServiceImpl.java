@@ -2,44 +2,26 @@ package com.example.demo.service.impl;
 
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
-import com.example.demo.exception.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.List;
+public class UserServiceImpl {
 
-@Service
-public class UserServiceImpl implements UserService {
+    private final UserRepository repo;
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Override
-    public User createUser(User user) {
-
-        // Email uniqueness check
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new IllegalStateException("Email already exists");
-        }
-
-        // Simple password hashing (no security as per syllabus)
-        user.setPassword(String.valueOf(user.getPassword().hashCode()));
-
-        return userRepository.save(user);
+    public UserServiceImpl(UserRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public User register(User user) {
+        if (repo.findByEmail(user.getEmail()).isPresent())
+            throw new IllegalArgumentException("Email already exists");
+
+        user.setPassword(encoder.encode(user.getPassword()));
+        return repo.save(user);
     }
 
-    @Override
-    public User getUserById(Long id) {
-
-        return userRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found with id: " + id)
-                );
+    public User findByEmail(String email) {
+        return repo.findByEmail(email).orElse(null);
     }
 }
