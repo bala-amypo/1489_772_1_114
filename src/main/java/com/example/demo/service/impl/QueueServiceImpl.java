@@ -3,12 +3,12 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 
-public class QueuePositionServiceImpl {
+public class QueueServiceImpl {
 
     private final QueuePositionRepository repo;
     private final TokenRepository tokenRepo;
 
-    public QueuePOsitionServiceImpl(QueuePositionRepository r, TokenRepository t) {
+    public QueueServiceImpl(QueuePositionRepository r, TokenRepository t) {
         this.repo = r;
         this.tokenRepo = t;
     }
