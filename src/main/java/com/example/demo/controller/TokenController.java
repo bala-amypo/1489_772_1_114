@@ -1,53 +1,38 @@
 package com.example.demo.controller;
 
-import org.springframework.web.bind.annotation.*;
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.example.demo.entity.Token;
-import com.example.demo.repository.TokenRepository;
+import com.example.demo.service.TokenService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/tokens")
+@Tag(name = "Tokens")
 public class TokenController {
 
-    private final TokenRepository repo;
+    private final TokenService tokenService;
 
-    public TokenController(TokenRepository repo) {
-        this.repo = repo;
+    public TokenController(TokenService tokenService) {
+        this.tokenService = tokenService;
     }
 
-    @PostMapping
-    public Token create(@RequestBody Token token) {
-        token.setIssuedAt(LocalDateTime.now());
-        return repo.save(token);
+    @PostMapping("/issue/{counterId}")
+    @Operation(summary = "Issue new token")
+    public Token issue(@PathVariable Long counterId) {
+        return tokenService.issueToken(counterId);
     }
 
-    @GetMapping
-    public List<Token> getAll() {
-        return repo.findAll();
+    @PutMapping("/status/{tokenId}")
+    @Operation(summary = "Update token status")
+    public Token updateStatus(@PathVariable Long tokenId,
+                              @RequestParam String status) {
+        return tokenService.updateStatus(tokenId, status);
     }
 
-    @GetMapping("/{id}")
-    public Token getById(@PathVariable Long id) {
-        return repo.findById(id).orElse(null);
-    }
-
-    @PutMapping("/{id}")
-    public Token update(@PathVariable Long id, @RequestBody Token token) {
-        Token t = repo.findById(id).orElse(null);
-        if (t == null) return null;
-
-        t.setTokenNumber(token.getTokenNumber());
-        t.setServiceCounterId(token.getServiceCounterId());
-        t.setStatus(token.getStatus());
-        t.setCompletedAt(token.getCompletedAt());
-
-        return repo.save(t);
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        repo.deleteById(id);
+    @GetMapping("/{tokenId}")
+    @Operation(summary = "Get token details")
+    public Token get(@PathVariable Long tokenId) {
+        return tokenService.getToken(tokenId);
     }
 }

@@ -1,36 +1,33 @@
 package com.example.demo.controller;
 
-import java.util.List;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import com.example.demo.entity.ServiceCounter;
 import com.example.demo.service.ServiceCounterService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/counters")
+@RequestMapping("/counters")
+@Tag(name = "Service Counters")
 public class ServiceCounterController {
 
-    @Autowired
-    private ServiceCounterService service;
+    private final ServiceCounterService service;
+
+    public ServiceCounterController(ServiceCounterService service) {
+        this.service = service;
+    }
 
     @PostMapping
-    public ServiceCounter createCounter(@Valid @RequestBody ServiceCounter counter) {
-        return service.save(counter);
+    @Operation(summary = "Add service counter")
+    public ServiceCounter add(@RequestBody ServiceCounter counter) {
+        return service.addCounter(counter);
     }
 
     @GetMapping("/active")
-    public List<ServiceCounter> getActiveCounters() {
-        return service.getAllActiveCounters();
-    }
-
-    @GetMapping("/{id}")
-    public ServiceCounter getCounterById(@PathVariable Long id) {
-        return service.getById(id);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteCounter(@PathVariable Long id) {
-        service.delete(id);
+    @Operation(summary = "Get active counters")
+    public List<ServiceCounter> getActive() {
+        return service.getActiveCounters();
     }
 }
