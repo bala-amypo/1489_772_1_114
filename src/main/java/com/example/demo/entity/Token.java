@@ -4,17 +4,20 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "token")
 public class Token {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
     private String tokenNumber;
-    private Long serviceCounterId;
+
+    @ManyToOne
+    private ServiceCounter serviceCounter;
+
     private String status;
-    private LocalDateTime issuedAt;
+    private LocalDateTime issuedAt = LocalDateTime.now();
     private LocalDateTime completedAt;
 
     public Long getId() { return id; }
@@ -23,14 +26,13 @@ public class Token {
     public String getTokenNumber() { return tokenNumber; }
     public void setTokenNumber(String tokenNumber) { this.tokenNumber = tokenNumber; }
 
-    public Long getServiceCounterId() { return serviceCounterId; }
-    public void setServiceCounterId(Long serviceCounterId) { this.serviceCounterId = serviceCounterId; }
+    public ServiceCounter getServiceCounter() { return serviceCounter; }
+    public void setServiceCounter(ServiceCounter serviceCounter) { this.serviceCounter = serviceCounter; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
     public LocalDateTime getIssuedAt() { return issuedAt; }
-    public void setIssuedAt(LocalDateTime issuedAt) { this.issuedAt = issuedAt; }
 
     public LocalDateTime getCompletedAt() { return completedAt; }
     public void setCompletedAt(LocalDateTime completedAt) { this.completedAt = completedAt; }
