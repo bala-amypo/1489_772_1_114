@@ -49,9 +49,3 @@ public class AuthController {
     }
 }
 
-
-public AuthController(UserService userService,
-                      JwtTokenProvider jwtTokenProvider) {
-    this.userService = userService;
-    this.jwtTokenProvider = jwtTokenProvider;
-}
