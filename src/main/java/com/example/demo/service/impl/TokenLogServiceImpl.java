@@ -1,41 +1,28 @@
 package com.example.demo.service.impl;
 
-import java.time.LocalDateTime;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
-import com.example.demo.entity.TokenLog;
-import com.example.demo.repository.TokenLogRepository;
-import com.example.demo.service.TokenLogService;
-
-@Service
-public class TokenLogServiceImpl implements TokenLogService {
+public class TokenLogServiceImpl {
 
     private final TokenLogRepository repo;
+    private final TokenRepository tokenRepo;
 
-    public TokenLogServiceImpl(TokenLogRepository repo) {
-        this.repo = repo;
+    public TokenLogServiceImpl(TokenLogRepository r, TokenRepository t) {
+        this.repo = r;
+        this.tokenRepo = t;
     }
 
-    @Override
-    public TokenLog create(TokenLog log) {
-        log.setCreatedAt(LocalDateTime.now());
-        return repo.save(log);
+    public TokenLog addLog(Long tokenId, String msg) {
+        Token t = tokenRepo.findById(tokenId).orElseThrow();
+        TokenLog l = new TokenLog();
+        l.setToken(t);
+        l.setLogMessage(msg);
+        return repo.save(l);
     }
 
-    @Override
-    public List<TokenLog> getAll() {
-        return repo.findAll();
-    }
-
-    @Override
-    public TokenLog getById(Long id) {
-        return repo.findById(id).orElse(null);
-    }
-
-    @Override
-    public void delete(Long id) {
-        repo.deleteById(id);
+    public List<TokenLog> getLogs(Long tokenId) {
+        return repo.findByToken_IdOrderByLoggedAtAsc(tokenId);
     }
 }

@@ -1,55 +1,29 @@
 package com.example.demo.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
 
-import org.springframework.stereotype.Service;
+public class QueuePositionServiceImpl {
 
-import com.example.demo.entity.QueuePosition;
-import com.example.demo.repository.QueuePositionRepository;
-import com.example.demo.service.QueuePositionService;
+    private final QueuePositionRepository repo;
+    private final TokenRepository tokenRepo;
 
-@Service
-public class QueuePositionServiceImpl implements QueuePositionService {
-
-    private final QueuePositionRepository repository;
-
-    public QueuePositionServiceImpl(QueuePositionRepository repository) {
-        this.repository = repository;
+    public QueuePOsitionServiceImpl(QueuePositionRepository r, TokenRepository t) {
+        this.repo = r;
+        this.tokenRepo = t;
     }
 
-    @Override
-    public QueuePosition create(QueuePosition queuePosition) {
-        queuePosition.setUpdatedAt(LocalDateTime.now());
-        return repository.save(queuePosition);
+    public QueuePosition updateQueuePosition(Long tokenId, Integer pos) {
+        if (pos < 1) throw new IllegalArgumentException(">= 1");
+
+        Token t = tokenRepo.findById(tokenId).orElseThrow();
+        QueuePosition qp = new QueuePosition();
+        qp.setToken(t);
+        qp.setPosition(pos);
+        return repo.save(qp);
     }
 
-    @Override
-    public List<QueuePosition> getAll() {
-        return repository.findAll();
-    }
-
-    @Override
-    public QueuePosition getById(Long id) {
-        return repository.findById(id).orElse(null);
-    }
-
-    @Override
-    public QueuePosition update(Long id, QueuePosition queuePosition) {
-        QueuePosition existing = repository.findById(id).orElse(null);
-        if (existing == null) {
-            return null;
-        }
-
-        existing.setTokenId(queuePosition.getTokenId());
-        existing.setPosition(queuePosition.getPosition());
-        existing.setUpdatedAt(LocalDateTime.now());
-
-        return repository.save(existing);
-    }
-
-    @Override
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public QueuePosition getPosition(Long tokenId) {
+        return repo.findByToken_Id(tokenId).orElse(null);
     }
 }
