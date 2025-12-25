@@ -48,3 +48,10 @@ public class AuthController {
         return new AuthResponse(token);
     }
 }
+
+
+public AuthController(UserService userService,
+                      JwtTokenProvider jwtTokenProvider) {
+    this.userService = userService;
+    this.jwtTokenProvider = jwtTokenProvider;
+}

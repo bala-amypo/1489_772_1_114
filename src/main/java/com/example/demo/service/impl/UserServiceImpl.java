@@ -1,27 +1,40 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.User;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
-public class UserServiceImpl {
+@Service   // ⭐⭐⭐ THIS IS REQUIRED
+public class UserServiceImpl implements UserService {
 
-    private final UserRepository repo;
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository repo) {
-        this.repo = repo;
+    public UserServiceImpl(UserRepository userRepository,
+                           BCryptPasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
     public User register(User user) {
-        if (repo.findByEmail(user.getEmail()).isPresent())
-            throw new IllegalArgumentException("Email already exists");
-
-        user.setPassword(encoder.encode(user.getPassword()));
-        return repo.save(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
-    public User findByEmail(String email) {
-        return repo.findByEmail(email).orElse(null);
+    @Override
+    public User login(String email, String password) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalStateException("Invalid credentials");
+        }
+
+        return user;
     }
 }
