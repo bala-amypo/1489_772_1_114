@@ -1,3 +1,4 @@
+
 package com.example.demo.controller;
 
 import com.example.demo.entity.Token;
@@ -63,7 +64,6 @@ public class TokenController {
                 return ResponseEntity.badRequest().body("Status cannot be empty");
             }
             
-            // Validate status value
             if (!isValidStatus(status)) {
                 return ResponseEntity.badRequest().body("Invalid status value. Must be one of: WAITING, SERVING, COMPLETED, CANCELLED");
             }
@@ -98,46 +98,6 @@ public class TokenController {
             
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to retrieve token");
-        }
-    }
-    
-    @GetMapping("/counter/{counterId}")
-    public ResponseEntity<?> getTokensByCounter(@PathVariable Long counterId,
-                                               @RequestParam(required = false) String status) {
-        try {
-            // This endpoint would require a new service method
-            // For now, return a placeholder response
-            Map<String, Object> response = new HashMap<>();
-            response.put("counterId", counterId);
-            response.put("status", status);
-            response.put("message", "Endpoint implementation pending");
-            
-            return ResponseEntity.ok(response);
-            
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to retrieve tokens");
-        }
-    }
-    
-    @GetMapping("/number/{tokenNumber}")
-    public ResponseEntity<?> getTokenByNumber(@PathVariable String tokenNumber) {
-        try {
-            if (tokenNumber == null || tokenNumber.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("tokenNumber is required");
-            }
-            
-            // This would require a new service method
-            // For now, return a placeholder response
-            Map<String, Object> response = new HashMap<>();
-            response.put("tokenNumber", tokenNumber);
-            response.put("message", "Endpoint implementation pending");
-            
-            return ResponseEntity.ok(response);
-            
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to retrieve token");
