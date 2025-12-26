@@ -13,9 +13,9 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tokenNumber; // <--- required
-
+    private String tokenNumber;
     private String status;
+
     private LocalDateTime issuedAt;
     private LocalDateTime completedAt;
 
