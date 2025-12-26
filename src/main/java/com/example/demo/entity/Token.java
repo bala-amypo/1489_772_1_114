@@ -13,10 +13,9 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tokenNumber; // important: matches setter in TokenServiceImpl
+    private String tokenNumber; // <--- required
 
     private String status;
-
     private LocalDateTime issuedAt;
     private LocalDateTime completedAt;
 
