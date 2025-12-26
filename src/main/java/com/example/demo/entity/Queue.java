@@ -3,39 +3,36 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "queues")
 public class Queue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @OneToOne
+    private Token token;
 
-    private Integer currentToken;
+    private int position;
 
-    // ✅ getters & setters
+    // getters & setters
+
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Token getToken() {
+        return token;
     }
 
-    public String getName() {
-        return name;
+    public void setToken(Token token) {
+        this.token = token;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public int getPosition() {
+        return position;
     }
 
-    public Integer getCurrentToken() {
-        return currentToken;
-    }
-
-    public void setCurrentToken(Integer currentToken) {
-        this.currentToken = currentToken;
+    public void setPosition(int position) {
+        this.position = position;
     }
 }
