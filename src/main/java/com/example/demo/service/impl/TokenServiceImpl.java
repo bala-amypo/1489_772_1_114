@@ -13,7 +13,7 @@ public class TokenServiceImpl {
     private final QueuePositionRepository queueRepo;
 
     public TokenServiceImpl(TokenRepository t, ServiceCounterRepository c,
-                            TokenLogRepository l, QueuePositionRepository q) {
+                            TokenLogRepository l, QueueRepository q) {
         this.tokenRepo = t;
         this.counterRepo = c;
         this.logRepo = l;
