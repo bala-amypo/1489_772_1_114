@@ -1,7 +1,9 @@
+
 package com.example.demo.entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "token_log")
@@ -39,4 +41,24 @@ public class TokenLog {
     
     public Token getToken() { return token; }
     public void setToken(Token token) { this.token = token; }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TokenLog tokenLog = (TokenLog) o;
+        return Objects.equals(id, tokenLog.id) && 
+               Objects.equals(loggedAt, tokenLog.loggedAt);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, loggedAt);
+    }
+    
+    @Override
+    public String toString() {
+        return "TokenLog{id=" + id + ", message='" + message + 
+               "', loggedAt=" + loggedAt + "}";
+    }
 }

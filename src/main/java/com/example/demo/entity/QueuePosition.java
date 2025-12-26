@@ -1,3 +1,4 @@
+
 package com.example.demo.entity;
 
 import javax.persistence.*;
@@ -27,7 +28,12 @@ public class QueuePosition {
     public void setId(Long id) { this.id = id; }
     
     public Integer getPosition() { return position; }
-    public void setPosition(Integer position) { this.position = position; }
+    public void setPosition(Integer position) { 
+        if (position != null && position < 1) {
+            throw new IllegalArgumentException("Position must be >= 1");
+        }
+        this.position = position; 
+    }
     
     public Token getToken() { return token; }
     public void setToken(Token token) { this.token = token; }
