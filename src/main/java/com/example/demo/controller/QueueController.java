@@ -1,16 +1,24 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.QueuePosition;
 import com.example.demo.service.QueueService;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/queue")
 public class QueueController {
 
-    private final QueueService queueService;
+    @Autowired
+    private QueueService queueService;
 
-    public QueueController(QueueService queueService) {
-        this.queueService = queueService;
+    @PostMapping("/add/{tokenId}")
+    public QueuePosition add(@PathVariable Long tokenId) {
+        return queueService.addToQueue(tokenId);
+    }
+
+    @GetMapping("/{tokenId}")
+    public QueuePosition get(@PathVariable Long tokenId) {
+        return queueService.getQueuePosition(tokenId);
     }
 }
