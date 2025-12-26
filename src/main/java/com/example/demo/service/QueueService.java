@@ -1,12 +1,32 @@
-import com.example.demo.entity.QueuePosition;
+@Service
+public class QueueServiceImpl implements QueueService {
 
-public interface QueueService {
+    private final QueuePositionRepository queueRepo;
 
-    QueuePosition add(QueuePosition queuePosition);
+    public QueueServiceImpl(QueuePositionRepository queueRepo) {
+        this.queueRepo = queueRepo;
+    }
 
-    QueuePosition getByTokenId(Long tokenId);
+    @Override
+    public QueuePosition add(QueuePosition qp) {
+        return queueRepo.save(qp);
+    }
 
-    int getPosition(Long tokenId);
+    @Override
+    public QueuePosition getByTokenId(Long tokenId) {
+        return queueRepo.findByToken_Id(tokenId)
+                .orElseThrow(() -> new RuntimeException("Queue not found"));
+    }
 
-    QueuePosition updatePosition(Long tokenId, int position);
+    @Override
+    public int getPosition(Long tokenId) {
+        return getByTokenId(tokenId).getPosition();
+    }
+
+    @Override
+    public QueuePosition updatePosition(Long tokenId, int position) {
+        QueuePosition qp = getByTokenId(tokenId);
+        qp.setPosition(position);
+        return queueRepo.save(qp);
+    }
 }
