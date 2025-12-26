@@ -1,29 +1,36 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
+import com.example.demo.entity.Queue;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.QueueRepository;
+import com.example.demo.service.QueueService;
+import org.springframework.stereotype.Service;
 
-public class QueueServiceImpl {
+@Service   // ✅ THIS IS REQUIRED
+public class QueueServiceImpl implements QueueService {
 
-    private final QueuePositionRepository repo;
-    private final TokenRepository tokenRepo;
+    private final QueueRepository queueRepository;
 
-    public QueueServiceImpl(QueuePositionRepository r, TokenRepository t) {
-        this.repo = r;
-        this.tokenRepo = t;
+    // ✅ SINGLE constructor
+    public QueueServiceImpl(QueueRepository queueRepository) {
+        this.queueRepository = queueRepository;
     }
 
-    public QueuePosition updateQueuePosition(Long tokenId, Integer pos) {
-        if (pos < 1) throw new IllegalArgumentException(">= 1");
-
-        Token t = tokenRepo.findById(tokenId).orElseThrow();
-        QueuePosition qp = new QueuePosition();
-        qp.setToken(t);
-        qp.setPosition(pos);
-        return repo.save(qp);
+    @Override
+    public Queue createQueue(Queue queue) {
+        return queueRepository.save(queue);
     }
 
-    public QueuePosition getPosition(Long tokenId) {
-        return repo.findByToken_Id(tokenId).orElse(null);
+    @Override
+    public Queue getQueue(Long id) {
+        return queueRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Queue not found"));
+    }
+
+    @Override
+    public Queue updateStatus(Long id, String status) {
+        Queue queue = getQueue(id);
+        queue.setStatus(status);
+        return queueRepository.save(queue);
     }
 }

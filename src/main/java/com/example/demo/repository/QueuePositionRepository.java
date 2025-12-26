@@ -1,12 +1,7 @@
 package com.example.demo.repository;
 
-import java.util.Optional;
-
+import com.example.demo.entity.Queue;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.demo.entity.QueuePosition;
-
-public interface QueuePositionRepository extends JpaRepository<QueuePosition, Long> {
-
-    Optional<QueuePosition> findByToken_Id(Long tokenId);
+public interface QueueRepository extends JpaRepository<Queue, Long> {
 }
