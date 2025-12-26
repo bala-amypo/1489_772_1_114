@@ -1,8 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.User;
-import com.example.demo.service.impl.UserServiceImpl;
 import com.example.demo.config.JwtTokenProvider;
+import com.example.demo.entity.User;
+import com.example.demo.payload.LoginRequest;
+import com.example.demo.payload.JwtResponse;
+import com.example.demo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,27 +13,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserServiceImpl userService;
-    private final JwtTokenProvider jwtProvider;
+    @Autowired
+    private UserService userService;
 
-    public AuthController(UserServiceImpl userService, JwtTokenProvider jwtProvider) {
-        this.userService = userService;
-        this.jwtProvider = jwtProvider;
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        User created = userService.register(user);
-        return ResponseEntity.ok(created);
-    }
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        User u = userService.findByEmail(user.getEmail());
-        if (u == null) return ResponseEntity.status(401).body("Invalid credentials");
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest request) {
+        User user = userService.authenticate(request.getEmail(), request.getPassword());
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
 
-        // Note: in real app, compare hashed password
-        String token = jwtProvider.generateToken(u.getId(), u.getEmail(), "ADMIN");
-        return ResponseEntity.ok(token);
+        String token = jwtTokenProvider.generateToken(user.getEmail());
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 }
