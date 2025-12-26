@@ -10,32 +10,30 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    private final Key key;
-    private final long validityInMillis;
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // generate a secure key
 
-    public JwtTokenProvider(String secret, long validityInMillis) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.validityInMillis = validityInMillis;
-    }
-
-    // Generate JWT with userId as subject, email and role as claims
-    public String generateToken(Long userId, String email, String role) {
-        Claims claims = Jwts.claims().setSubject(userId.toString());
-        claims.put("email", email);
-        claims.put("role", role);
-
-        Date now = new Date();
-        Date expiry = new Date(now.getTime() + validityInMillis);
-
+    // Generate JWT token
+    public String generateToken(String email) {
+        long expirationMillis = 1000 * 60 * 60; // 1 hour
         return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(expiry)
-                .signWith(key, SignatureAlgorithm.HS256)
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
+                .signWith(key)
                 .compact();
     }
 
-    // Validate token signature and expiration
+    // Extract email (subject) from JWT token
+    public String getEmailFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    // Validate JWT token
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -43,10 +41,5 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
-    }
-
-    // Get all claims from token
-    public Claims getClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 }
