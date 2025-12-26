@@ -1,33 +1,42 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Queue;
-import com.example.demo.repository.QueueRepository;
-import com.example.demo.service.QueueService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.example.demo.entity.QueuePosition;
+import com.example.demo.entity.Token;
+import com.example.demo.repository.QueuePositionRepository;
 
 @Service
-public class QueueServiceImpl implements QueueService {
+public class QueueServiceImpl {
 
-    private final QueueRepository queueRepository;
+    @Autowired
+    private QueuePositionRepository queuePositionRepository;
 
-    public QueueServiceImpl(QueueRepository queueRepository) {
-        this.queueRepository = queueRepository;
+    // used by tests
+    public QueuePosition updateQueuePosition(long tokenId, int position) {
+        Token token = new Token();
+        token.setId(tokenId);
+
+        QueuePosition qp = new QueuePosition();
+        qp.setToken(token);
+        qp.setPosition(position);
+
+        return queuePositionRepository.save(qp);
     }
 
-    @Override
-    public Queue createQueue(Queue queue) {
-        return queueRepository.save(queue);
+    // alias method expected by tests
+    public QueuePosition updatePosition(long tokenId, int position) {
+        return updateQueuePosition(tokenId, position);
     }
 
-    @Override
-    public List<Queue> getAllQueues() {
-        return queueRepository.findAll();
-    }
-
-    @Override
-    public Queue getQueueById(Long id) {
-        return queueRepository.findById(id).orElse(null);
+    // used by tests
+    public int getPosition(long tokenId) {
+        return queuePositionRepository.findAll()
+                .stream()
+                .filter(q -> q.getToken() != null && q.getToken().getId() == tokenId)
+                .map(QueuePosition::getPosition)
+                .findFirst()
+                .orElse(-1);
     }
 }
