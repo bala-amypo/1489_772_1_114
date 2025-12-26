@@ -1,29 +1,24 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 public class TokenLog {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     private Token token;
 
-    private String logMessage;
+    private String message;
+
     private LocalDateTime loggedAt = LocalDateTime.now();
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Token getToken() { return token; }
-    public void setToken(Token token) { this.token = token; }
-
-    public String getLogMessage() { return logMessage; }
-    public void setLogMessage(String logMessage) { this.logMessage = logMessage; }
-
-    public LocalDateTime getLoggedAt() { return loggedAt; }
 }
