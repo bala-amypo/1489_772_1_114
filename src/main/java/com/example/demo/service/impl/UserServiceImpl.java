@@ -13,7 +13,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    // ✅ SINGLE constructor (Spring + Test both happy)
+    // ✅ REQUIRED FOR AMYPO TEST CASE
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
+
+    // ✅ REQUIRED FOR SPRING
     public UserServiceImpl(UserRepository userRepository,
                            BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
