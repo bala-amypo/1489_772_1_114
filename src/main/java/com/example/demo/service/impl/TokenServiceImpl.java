@@ -34,7 +34,7 @@ public class TokenServiceImpl {
 
         Token saved = tokenRepo.save(t);
 
-        Queue qp = new Queue();
+        Queue qp = new QueuePosition();
         qp.setToken(saved);
         qp.setPosition(
                 tokenRepo.findByServiceCounter_IdAndStatusOrderByIssuedAtAsc(counterId,"WAITING").size()
