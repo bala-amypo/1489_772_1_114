@@ -2,20 +2,19 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
-@Data
 @Entity
+@Data
 public class TokenLog {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String message;
+    private LocalDateTime loggedAt;
+
     @ManyToOne
     private Token token;
-
-    private String message;
-
-    private LocalDateTime loggedAt = LocalDateTime.now();
 }
