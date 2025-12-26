@@ -1,4 +1,3 @@
-cat > src/main/java/com/example/demo/config/JwtAuthenticationEntryPoint.java << 'EOF'
 package com.example.demo.config;
 
 import org.springframework.security.core.AuthenticationException;
@@ -19,4 +18,3 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
 }
-EOF
