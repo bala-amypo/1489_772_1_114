@@ -1,79 +1,54 @@
 package com.example.demo.config;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 
+@Component
 public class JwtTokenProvider {
 
-    // 🔐 Secret key used to sign JWT
-    private final String secret;
+    private final Key key;
+    private final long validityInMillis;
 
-    // ⏱ Token validity time (milliseconds)
-    private final long validity;
-
-    // ✅ Constructor injection (as per constraint)
-    public JwtTokenProvider(String secret, long validity) {
-        this.secret = secret;
-        this.validity = validity;
+    public JwtTokenProvider(String secret, long validityInMillis) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        this.validityInMillis = validityInMillis;
     }
 
-    // 🔑 Generate JWT Token
     public String generateToken(Long userId, String email, String role) {
+        Date now = new Date();
+        Date expiry = new Date(now.getTime() + validityInMillis);
 
         return Jwts.builder()
-                // subject = userId
-                .setSubject(String.valueOf(userId))
-
-                // custom payload data
+                .setSubject(userId.toString())
                 .claim("email", email)
                 .claim("role", role)
-
-                // issued time
-                .setIssuedAt(new Date())
-
-                // expiry time
-                .setExpiration(new Date(System.currentTimeMillis() + validity))
-
-                // signing algorithm + secret
-                .signWith(SignatureAlgorithm.HS256, secret)
-
-                // final token string
+                .setIssuedAt(now)
+                .setExpiration(expiry)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // ✅ Validate token (used during authentication)
     public boolean validateToken(String token) {
         try {
-            getClaims(token);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (Exception e) {
+        } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
 
-    // 📦 Extract all claims from token
     public Claims getClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token)
-                .getBody();
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    // 📧 Extract email from token (USED IN AUTH FLOW)
-    public String getEmailFromToken(String token) {
-        return getClaims(token).get("email", String.class);
-    }
-
-    // 🧑 Extract userId from token
-    public Long getUserIdFromToken(String token) {
-        return Long.parseLong(getClaims(token).getSubject());
-    }
-
-    // 🎭 Extract role from token
-    public String getRoleFromToken(String token) {
-        return getClaims(token).get("role", String.class);
+    @Nullable
+    public Long getUserId(String token) {
+        Claims claims = getClaims(token);
+        return Long.parseLong(claims.getSubject());
     }
 }
