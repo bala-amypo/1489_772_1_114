@@ -1,17 +1,17 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Queue;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.QueueRepository;
 import com.example.demo.service.QueueService;
 import org.springframework.stereotype.Service;
 
-@Service   // ✅ THIS IS REQUIRED
+import java.util.List;
+
+@Service
 public class QueueServiceImpl implements QueueService {
 
     private final QueueRepository queueRepository;
 
-    // ✅ SINGLE constructor
     public QueueServiceImpl(QueueRepository queueRepository) {
         this.queueRepository = queueRepository;
     }
@@ -22,15 +22,12 @@ public class QueueServiceImpl implements QueueService {
     }
 
     @Override
-    public Queue getQueue(Long id) {
-        return queueRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Queue not found"));
+    public List<Queue> getAllQueues() {
+        return queueRepository.findAll();
     }
 
     @Override
-    public Queue updateStatus(Long id, String status) {
-        Queue queue = getQueue(id);
-        queue.setStatus(status);
-        return queueRepository.save(queue);
+    public Queue getQueueById(Long id) {
+        return queueRepository.findById(id).orElse(null);
     }
 }
