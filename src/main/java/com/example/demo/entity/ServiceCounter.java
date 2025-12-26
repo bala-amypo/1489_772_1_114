@@ -1,12 +1,10 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
+@Data
 @Entity
-@Getter
-@Setter
 public class ServiceCounter {
 
     @Id
@@ -16,5 +14,6 @@ public class ServiceCounter {
     private String counterName;
     private String department;
 
+    @Column(nullable = false)
     private Boolean isActive = true;
 }
