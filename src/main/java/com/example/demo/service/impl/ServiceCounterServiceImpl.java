@@ -1,3 +1,4 @@
+cat > src/main/java/com/example/demo/service/impl/ServiceCounterServiceImpl.java << 'EOF'
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.ServiceCounter;
@@ -11,9 +12,9 @@ import java.util.List;
 @Service
 public class ServiceCounterServiceImpl implements ServiceCounterService {
     
-    @Autowired
-    private ServiceCounterRepository counterRepository;
+    private final ServiceCounterRepository counterRepository;
     
+    @Autowired
     public ServiceCounterServiceImpl(ServiceCounterRepository counterRepository) {
         this.counterRepository = counterRepository;
     }
