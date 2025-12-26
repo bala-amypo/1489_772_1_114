@@ -3,7 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.Token;
 import com.example.demo.entity.ServiceCounter;
 import com.example.demo.entity.TokenLog;
-import com.example.demo.entity.Queue;
+import com.example.demo.entity.QueuePosition;
 
 import com.example.demo.repository.TokenRepository;
 import com.example.demo.repository.ServiceCounterRepository;
@@ -20,13 +20,13 @@ public class TokenServiceImpl {
     private final TokenRepository tokenRepo;
     private final ServiceCounterRepository counterRepo;
     private final TokenLogRepository logRepo;
-    private final QueueRepository queueRepo;
+    private final QueuePositionRepository queueRepo;
 
     public TokenServiceImpl(
             TokenRepository tokenRepo,
             ServiceCounterRepository counterRepo,
             TokenLogRepository logRepo,
-            QueueRepository queueRepo
+            QueuePositionRepository queueRepo
     ) {
         this.tokenRepo = tokenRepo;
         this.counterRepo = counterRepo;
@@ -50,7 +50,7 @@ public class TokenServiceImpl {
 
         Token savedToken = tokenRepo.save(token);
 
-        Queue queue = new Queue();
+        QueuePosition queue = new QueuePosition();
         queue.setToken(savedToken);
         queue.setPosition(
                 tokenRepo
