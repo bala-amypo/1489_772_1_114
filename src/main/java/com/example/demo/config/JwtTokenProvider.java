@@ -70,4 +70,3 @@ public class JwtTokenProvider {
         return getClaims(token).getSubject();
     }
 }
-EOF

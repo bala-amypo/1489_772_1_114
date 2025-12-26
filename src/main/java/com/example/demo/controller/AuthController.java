@@ -70,13 +70,6 @@ public class AuthController {
             String email = credentials.get("email");
             String password = credentials.get("password");
             
-            if (email == null || email.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Email is required");
-            }
-            if (password == null || password.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Password is required");
-            }
-            
             User user = userService.findByEmail(email);
             
             if (!passwordEncoder.matches(password, user.getPassword())) {
@@ -107,68 +100,5 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred during login");
         }
-    }
-    
-    @GetMapping("/validate")
-    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String authHeader) {
-        try {
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid authorization header");
-            }
-            
-            String token = authHeader.substring(7);
-            
-            if (jwtTokenProvider.validateToken(token)) {
-                Map<String, Object> claims = new HashMap<>();
-                claims.put("valid", true);
-                claims.put("userId", jwtTokenProvider.getSubject(token));
-                claims.put("email", jwtTokenProvider.getClaims(token).get("email"));
-                claims.put("role", jwtTokenProvider.getClaims(token).get("role"));
-                return ResponseEntity.ok(claims);
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
-            }
-            
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token validation failed");
-        }
-    }
-    
-    @GetMapping("/profile")
-    public ResponseEntity<?> getProfile(@RequestHeader("Authorization") String authHeader) {
-        try {
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid authorization header");
-            }
-            
-            String token = authHeader.substring(7);
-            
-            if (!jwtTokenProvider.validateToken(token)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
-            }
-            
-            String userId = jwtTokenProvider.getSubject(token);
-            String email = jwtTokenProvider.getClaims(token).get("email", String.class);
-            String role = jwtTokenProvider.getClaims(token).get("role", String.class);
-            
-            Map<String, Object> profile = new HashMap<>();
-            profile.put("id", Long.parseLong(userId));
-            profile.put("email", email);
-            profile.put("role", role);
-            
-            return ResponseEntity.ok(profile);
-            
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to retrieve profile");
-        }
-    }
-    
-    @GetMapping("/test")
-    public ResponseEntity<?> testEndpoint() {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Auth endpoints are working!");
-        response.put("status", "OK");
-        return ResponseEntity.ok(response);
     }
 }
