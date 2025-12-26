@@ -10,7 +10,7 @@ public class TokenServiceImpl {
     private final TokenRepository tokenRepo;
     private final ServiceCounterRepository counterRepo;
     private final TokenLogRepository logRepo;
-    private final QueuePositionRepository queueRepo;
+    private final QueueRepository queueRepo;
 
     public TokenServiceImpl(TokenRepository t, ServiceCounterRepository c,
                             TokenLogRepository l, QueueRepository q) {
@@ -34,7 +34,7 @@ public class TokenServiceImpl {
 
         Token saved = tokenRepo.save(t);
 
-        QueuePosition qp = new QueuePosition();
+        Queue qp = new Queue();
         qp.setToken(saved);
         qp.setPosition(
                 tokenRepo.findByServiceCounter_IdAndStatusOrderByIssuedAtAsc(counterId,"WAITING").size()
