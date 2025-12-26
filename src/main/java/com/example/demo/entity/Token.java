@@ -1,9 +1,11 @@
+
 package com.example.demo.entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "token")
@@ -57,11 +59,35 @@ public class Token {
     public void setCompletedAt(LocalDateTime completedAt) { this.completedAt = completedAt; }
     
     public ServiceCounter getServiceCounter() { return serviceCounter; }
-    public void setServiceCounter(ServiceCounter serviceCounter) { this.serviceCounter = serviceCounter; }
+    public void setServiceCounter(ServiceCounter serviceCounter) { 
+        this.serviceCounter = serviceCounter; 
+    }
     
     public QueuePosition getQueuePosition() { return queuePosition; }
-    public void setQueuePosition(QueuePosition queuePosition) { this.queuePosition = queuePosition; }
+    public void setQueuePosition(QueuePosition queuePosition) { 
+        this.queuePosition = queuePosition; 
+    }
     
     public List<TokenLog> getLogs() { return logs; }
     public void setLogs(List<TokenLog> logs) { this.logs = logs; }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Token token = (Token) o;
+        return Objects.equals(id, token.id) && 
+               Objects.equals(tokenNumber, token.tokenNumber);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tokenNumber);
+    }
+    
+    @Override
+    public String toString() {
+        return "Token{id=" + id + ", tokenNumber='" + tokenNumber + 
+               "', status='" + status + "', issuedAt=" + issuedAt + "}";
+    }
 }

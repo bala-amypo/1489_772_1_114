@@ -1,8 +1,10 @@
+
 package com.example.demo.entity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "service_counter")
@@ -44,4 +46,24 @@ public class ServiceCounter {
     
     public List<Token> getTokens() { return tokens; }
     public void setTokens(List<Token> tokens) { this.tokens = tokens; }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ServiceCounter that = (ServiceCounter) o;
+        return Objects.equals(id, that.id) && 
+               Objects.equals(counterName, that.counterName);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, counterName);
+    }
+    
+    @Override
+    public String toString() {
+        return "ServiceCounter{id=" + id + ", counterName='" + counterName + 
+               "', department='" + department + "', isActive=" + isActive + "}";
+    }
 }
