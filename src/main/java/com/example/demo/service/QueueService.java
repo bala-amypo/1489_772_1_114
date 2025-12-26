@@ -1,32 +1,14 @@
-@Service
-public class QueueServiceImpl implements QueueService {
+package com.example.demo.service;
 
-    private final QueuePositionRepository queueRepo;
+import com.example.demo.entity.QueuePosition;
 
-    public QueueServiceImpl(QueuePositionRepository queueRepo) {
-        this.queueRepo = queueRepo;
-    }
+public interface QueueService {
 
-    @Override
-    public QueuePosition add(QueuePosition qp) {
-        return queueRepo.save(qp);
-    }
+    QueuePosition add(QueuePosition queuePosition);
 
-    @Override
-    public QueuePosition getByTokenId(Long tokenId) {
-        return queueRepo.findByToken_Id(tokenId)
-                .orElseThrow(() -> new RuntimeException("Queue not found"));
-    }
+    QueuePosition getByTokenId(Long tokenId);
 
-    @Override
-    public int getPosition(Long tokenId) {
-        return getByTokenId(tokenId).getPosition();
-    }
+    int getPosition(Long tokenId);
 
-    @Override
-    public QueuePosition updatePosition(Long tokenId, int position) {
-        QueuePosition qp = getByTokenId(tokenId);
-        qp.setPosition(position);
-        return queueRepo.save(qp);
-    }
+    QueuePosition updatePosition(Long tokenId, int position);
 }

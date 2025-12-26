@@ -1,3 +1,7 @@
+package com.example.demo.entity;
+
+import jakarta.persistence.*;
+
 @Entity
 @Table(name = "queue_position")
 public class QueuePosition {
@@ -12,13 +16,27 @@ public class QueuePosition {
 
     private int position;
 
-    // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Token getToken() { return token; }
-    public void setToken(Token token) { this.token = token; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public int getPosition() { return position; }
-    public void setPosition(int position) { this.position = position; }
+    public Token getToken() {
+        return token;
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 }

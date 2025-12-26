@@ -1,42 +1,39 @@
 package com.example.demo.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.entity.QueuePosition;
+import com.example.demo.repository.QueuePositionRepository;
+import com.example.demo.service.QueueService;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.QueuePosition;
-import com.example.demo.entity.Token;
-import com.example.demo.repository.QueuePositionRepository;
-
 @Service
-public class QueueServiceImpl {
+public class QueueServiceImpl implements QueueService {
 
-    @Autowired
-    private QueuePositionRepository queuePositionRepository;
+    private final QueuePositionRepository queueRepo;
 
-    // used by tests
-    public QueuePosition updateQueuePosition(long tokenId, int position) {
-        Token token = new Token();
-        token.setId(tokenId);
+    public QueueServiceImpl(QueuePositionRepository queueRepo) {
+        this.queueRepo = queueRepo;
+    }
 
-        QueuePosition qp = new QueuePosition();
-        qp.setToken(token);
+    @Override
+    public QueuePosition add(QueuePosition qp) {
+        return queueRepo.save(qp);
+    }
+
+    @Override
+    public QueuePosition getByTokenId(Long tokenId) {
+        return queueRepo.findByToken_Id(tokenId)
+                .orElseThrow(() -> new RuntimeException("Queue not found"));
+    }
+
+    @Override
+    public int getPosition(Long tokenId) {
+        return getByTokenId(tokenId).getPosition();
+    }
+
+    @Override
+    public QueuePosition updatePosition(Long tokenId, int position) {
+        QueuePosition qp = getByTokenId(tokenId);
         qp.setPosition(position);
-
-        return queuePositionRepository.save(qp);
-    }
-
-    // alias method expected by tests
-    public QueuePosition updatePosition(long tokenId, int position) {
-        return updateQueuePosition(tokenId, position);
-    }
-
-    // used by tests
-    public int getPosition(long tokenId) {
-        return queuePositionRepository.findAll()
-                .stream()
-                .filter(q -> q.getToken() != null && q.getToken().getId() == tokenId)
-                .map(QueuePosition::getPosition)
-                .findFirst()
-                .orElse(-1);
+        return queueRepo.save(qp);
     }
 }
