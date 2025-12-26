@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CounterServiceImpl implements CounterService {
+public class ServiceCounterServiceImpl implements Service {
 
     @Autowired
     private ServiceCounterRepository counterRepository;
