@@ -1,56 +1,36 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.ServiceCounter;
 import com.example.demo.entity.Token;
-import com.example.demo.repository.ServiceCounterRepository;
-import com.example.demo.repository.TokenRepository;
-import com.example.demo.service.TokenService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.entity.TokenLog;
+import com.example.demo.repository.TokenLogRepository;
+import com.example.demo.service.TokenLogService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.List;
 
-@Service
-public class TokenServiceImpl implements TokenService {
+@Service   // 🔴 REQUIRED
+public class TokenLogServiceImpl implements TokenLogService {
 
-    @Autowired
-    private TokenRepository tokenRepository;
+    private final TokenLogRepository repo;
 
-    @Autowired
-    private ServiceCounterRepository counterRepository;
-
-    @Override
-    public Token issueToken(Long counterId) {
-        ServiceCounter counter = counterRepository.findById(counterId)
-                .orElseThrow(() -> new RuntimeException("Counter not found"));
-
-        Token token = new Token();
-        token.setServiceCounter(counter);
-        token.setTokenNumber(UUID.randomUUID().toString());
-        token.setStatus("ISSUED");
-        token.setIssuedAt(LocalDateTime.now());
-
-        return tokenRepository.save(token);
+    public TokenLogServiceImpl(TokenLogRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public Token updateStatus(Long tokenId, String status) {
-        Token token = tokenRepository.findById(tokenId)
-                .orElseThrow(() -> new RuntimeException("Token not found"));
-
-        token.setStatus(status);
-
-        if ("COMPLETED".equalsIgnoreCase(status)) {
-            token.setCompletedAt(LocalDateTime.now());
-        }
-
-        return tokenRepository.save(token);
+    public TokenLog create(TokenLog log) {
+        log.setLoggedAt(LocalDateTime.now());
+        return repo.save(log);
     }
 
     @Override
-    public Token getToken(Long tokenId) {
-        return tokenRepository.findById(tokenId)
-                .orElseThrow(() -> new RuntimeException("Token not found"));
+    public List<TokenLog> getAll() {
+        return repo.findAll();
+    }
+
+    @Override
+    public List<TokenLog> getByTokenId(Long tokenId) {
+        return repo.findByTokenId(tokenId);
     }
 }
