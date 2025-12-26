@@ -9,10 +9,17 @@ import java.util.List;
 @Service
 public class ServiceCounterServiceImpl {
 
-    private final ServiceCounterRepository repo;
+    private final ServiceCounterRepository counterRepository;
 
-    public ServiceCounterServiceImpl(ServiceCounterRepository repo) { this.repo = repo; }
+    public ServiceCounterServiceImpl(ServiceCounterRepository counterRepository) {
+        this.counterRepository = counterRepository;
+    }
 
-    public ServiceCounter addCounter(ServiceCounter sc) { return repo.save(sc); }
-    public List<ServiceCounter> getActiveCounters() { return repo.findByIsActiveTrue(); }
+    public ServiceCounter addCounter(ServiceCounter counter) {
+        return counterRepository.save(counter);
+    }
+
+    public List<ServiceCounter> getActiveCounters() {
+        return counterRepository.findByIsActiveTrue();
+    }
 }
