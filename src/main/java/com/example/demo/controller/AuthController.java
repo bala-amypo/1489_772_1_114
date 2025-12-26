@@ -1,3 +1,5 @@
+mkdir -p src/main/java/com/example/demo/controller
+cat > src/main/java/com/example/demo/controller/AuthController.java << 'EOF'
 package com.example.demo.controller;
 
 import com.example.demo.config.JwtTokenProvider;
@@ -29,7 +31,6 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
-            // Validate input
             if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
                 return ResponseEntity.badRequest().body("Email is required");
             }
@@ -39,14 +40,12 @@ public class AuthController {
             
             User registered = userService.register(user);
             
-            // Generate JWT token
             String token = jwtTokenProvider.generateToken(
                 registered.getId(),
                 registered.getEmail(),
                 registered.getRole()
             );
             
-            // Create response
             Map<String, Object> response = new HashMap<>();
             response.put("user", registered);
             response.put("token", token);
@@ -65,7 +64,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         try {
-            // Validate input
             if (credentials == null || !credentials.containsKey("email") || !credentials.containsKey("password")) {
                 return ResponseEntity.badRequest().body("Email and password are required");
             }
@@ -73,29 +71,18 @@ public class AuthController {
             String email = credentials.get("email");
             String password = credentials.get("password");
             
-            if (email == null || email.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Email is required");
-            }
-            if (password == null || password.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Password is required");
-            }
-            
-            // Find user by email
             User user = userService.findByEmail(email);
             
-            // Verify password
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
             }
             
-            // Generate JWT token
             String token = jwtTokenProvider.generateToken(
                 user.getId(),
                 user.getEmail(),
                 user.getRole()
             );
             
-            // Create response
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> userResponse = new HashMap<>();
             userResponse.put("id", user.getId());
@@ -103,71 +90,4 @@ public class AuthController {
             userResponse.put("role", user.getRole());
             
             response.put("user", userResponse);
-            response.put("token", token);
-            response.put("message", "Login successful");
-            
-            return ResponseEntity.ok(response);
-            
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred during login");
-        }
-    }
-    
-    @GetMapping("/validate")
-    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String authHeader) {
-        try {
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid authorization header");
-            }
-            
-            String token = authHeader.substring(7);
-            
-            if (jwtTokenProvider.validateToken(token)) {
-                Map<String, Object> claims = new HashMap<>();
-                claims.put("valid", true);
-                claims.put("userId", jwtTokenProvider.getClaims(token).getSubject());
-                claims.put("email", jwtTokenProvider.getClaims(token).get("email"));
-                claims.put("role", jwtTokenProvider.getClaims(token).get("role"));
-                return ResponseEntity.ok(claims);
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
-            }
-            
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token validation failed");
-        }
-    }
-    
-    @GetMapping("/profile")
-    public ResponseEntity<?> getProfile(@RequestHeader("Authorization") String authHeader) {
-        try {
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid authorization header");
-            }
-            
-            String token = authHeader.substring(7);
-            
-            if (!jwtTokenProvider.validateToken(token)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
-            }
-            
-            String userId = jwtTokenProvider.getClaims(token).getSubject();
-            String email = jwtTokenProvider.getClaims(token).get("email", String.class);
-            String role = jwtTokenProvider.getClaims(token).get("role", String.class);
-            
-            Map<String, Object> profile = new HashMap<>();
-            profile.put("id", Long.parseLong(userId));
-            profile.put("email", email);
-            profile.put("role", role);
-            
-            return ResponseEntity.ok(profile);
-            
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to retrieve profile");
-        }
-    }
-}
+            response.put("token

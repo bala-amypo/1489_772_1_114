@@ -1,3 +1,4 @@
+
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Token;
@@ -13,12 +14,10 @@ import java.util.List;
 @Service
 public class TokenLogServiceImpl implements TokenLogService {
     
-    @Autowired
-    private TokenLogRepository logRepository;
+    private final TokenLogRepository logRepository;
+    private final TokenRepository tokenRepository;
     
     @Autowired
-    private TokenRepository tokenRepository;
-    
     public TokenLogServiceImpl(TokenLogRepository logRepository, TokenRepository tokenRepository) {
         this.logRepository = logRepository;
         this.tokenRepository = tokenRepository;

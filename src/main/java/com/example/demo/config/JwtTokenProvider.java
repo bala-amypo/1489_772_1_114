@@ -1,10 +1,10 @@
+
 package com.example.demo.config;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,16 +20,12 @@ public class JwtTokenProvider {
     public JwtTokenProvider() {
         this.secretKey = "ChangeThisSecretKeyReplaceMe1234567890";
         this.validityInMilliseconds = 3600000; // 1 hour
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
     
     public JwtTokenProvider(String secretKey, long validityInMilliseconds) {
         this.secretKey = secretKey;
         this.validityInMilliseconds = validityInMilliseconds;
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
-    }
-    
-    @PostConstruct
-    protected void init() {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
     
@@ -74,3 +70,4 @@ public class JwtTokenProvider {
         return getClaims(token).getSubject();
     }
 }
+EOF

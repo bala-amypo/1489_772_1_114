@@ -1,3 +1,4 @@
+
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.QueuePosition;
@@ -13,12 +14,10 @@ import java.util.Optional;
 @Service
 public class QueueServiceImpl implements QueueService {
     
-    @Autowired
-    private QueuePositionRepository queueRepository;
+    private final QueuePositionRepository queueRepository;
+    private final TokenRepository tokenRepository;
     
     @Autowired
-    private TokenRepository tokenRepository;
-    
     public QueueServiceImpl(QueuePositionRepository queueRepository, TokenRepository tokenRepository) {
         this.queueRepository = queueRepository;
         this.tokenRepository = tokenRepository;

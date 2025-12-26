@@ -1,3 +1,4 @@
+
 package com.example.demo.config;
 
 import org.springframework.context.annotation.Bean;
@@ -24,8 +25,13 @@ public class SecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .antMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-            .anyRequest().authenticated();
+            .antMatchers("/api/auth/**", 
+                        "/swagger-ui/**", 
+                        "/v3/api-docs/**",
+                        "/h2-console/**").permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .headers().frameOptions().sameOrigin(); // For H2 console
         
         return http.build();
     }
