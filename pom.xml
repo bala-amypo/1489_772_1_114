@@ -83,6 +83,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- TestNG (Required by portal test cases) -->
+<dependency>
+    <groupId>org.testng</groupId>
+    <artifactId>testng</artifactId>
+    <version>7.7.0</version>
+    <scope>test</scope>
+</dependency>
+
 
         <dependency>
             <groupId>org.springframework.security</groupId>
