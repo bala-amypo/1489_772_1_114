@@ -17,6 +17,7 @@ public class JwtTokenProvider {
     // No-arg constructor for Spring
     public JwtTokenProvider() { }
 
+    // Generate JWT using email
     public String generateToken(String email) {
         Date now = new Date();
         return Jwts.builder()
@@ -27,8 +28,11 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    // Get email from JWT
     public String getEmailFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build()
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();

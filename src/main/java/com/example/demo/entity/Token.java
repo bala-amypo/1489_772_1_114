@@ -8,11 +8,15 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 public class Token {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String tokenNumber; // important: matches setter in TokenServiceImpl
+
     private String status;
+
     private LocalDateTime issuedAt;
     private LocalDateTime completedAt;
 
