@@ -5,26 +5,33 @@ import com.example.demo.entity.TokenLog;
 import com.example.demo.repository.TokenLogRepository;
 import com.example.demo.repository.TokenRepository;
 import org.springframework.stereotype.Service;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class TokenLogServiceImpl {
 
-    private final TokenLogRepository logRepo;
-    private final TokenRepository tokenRepo;
+    private final TokenLogRepository logRepository;
+    private final TokenRepository tokenRepository;
 
-    public TokenLogServiceImpl(TokenLogRepository l, TokenRepository t) { this.logRepo=l; this.tokenRepo=t; }
+    public TokenLogServiceImpl(TokenLogRepository logRepository, TokenRepository tokenRepository) {
+        this.logRepository = logRepository;
+        this.tokenRepository = tokenRepository;
+    }
 
     public TokenLog addLog(Long tokenId, String message) {
-        Token t = tokenRepo.findById(tokenId).orElseThrow(() -> new RuntimeException("Token not found"));
+        Token token = tokenRepository.findById(tokenId)
+                .orElseThrow(() -> new RuntimeException("Token not found"));
+
         TokenLog log = new TokenLog();
-        log.setToken(t);
+        log.setToken(token);
         log.setMessage(message);
-        return logRepo.save(log);
+        log.setLoggedAt(LocalDateTime.now());
+
+        return logRepository.save(log);
     }
 
     public List<TokenLog> getLogs(Long tokenId) {
-        return logRepo.findByToken_IdOrderByLoggedAtAsc(tokenId);
+        return logRepository.findByToken_IdOrderByLoggedAtAsc(tokenId);
     }
 }
