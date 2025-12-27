@@ -1,4 +1,3 @@
-package com.example.demo.dto;
 
 public class AuthResponse {
     private String token;
@@ -13,4 +12,5 @@ public class AuthResponse {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+}g role) { this.role = role; }
 }

@@ -1,5 +1,3 @@
-package com.example.demo.dto;
-
 public class QueuePositionResponse {
     private Long tokenId;
     private Integer position;
