@@ -1,22 +1,28 @@
+___________________
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.ServiceCounter;
 import com.example.demo.repository.ServiceCounterRepository;
+import com.example.demo.service.ServiceCounterService;
+import org.springframework.stereotype.Service;
 import java.util.List;
 
-public class ServiceCounterServiceImpl {
+@Service
+public class ServiceCounterServiceImpl implements ServiceCounterService {
+    private final ServiceCounterRepository counterRepository;
 
-    private final ServiceCounterRepository repo;
-
-    public ServiceCounterServiceImpl(ServiceCounterRepository repo) {
-        this.repo = repo;
+    public ServiceCounterServiceImpl(ServiceCounterRepository counterRepository) {
+        this.counterRepository = counterRepository;
     }
 
-    public ServiceCounter addCounter(ServiceCounter c) {
-        return repo.save(c);
+    @Override
+    public ServiceCounter addCounter(ServiceCounter counter) {
+        return counterRepository.save(counter);
     }
 
+    @Override
     public List<ServiceCounter> getActiveCounters() {
-        return repo.findByIsActiveTrue();
+        return counterRepository.findByIsActiveTrue();
     }
 }
+___
