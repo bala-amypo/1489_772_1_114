@@ -25,4 +25,3 @@ public class ServiceCounterServiceImpl implements ServiceCounterService {
         return counterRepository.findByIsActiveTrue();
     }
 }
-___
