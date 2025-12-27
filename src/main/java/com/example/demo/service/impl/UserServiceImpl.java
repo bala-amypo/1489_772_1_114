@@ -2,27 +2,30 @@ package com.example.demo.service.impl;
 
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.example.demo.service.UserService;
+import org.springframework.stereotype.Service;
 
-public class UserServiceImpl {
+@Service
+public class UserServiceImpl implements UserService {
+    private final UserRepository userRepository;
 
-    private final UserRepository repo;
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-    public UserServiceImpl(UserRepository repo) {
-        this.repo = repo;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
+    @Override
     public User register(User user) {
-        if (repo.findByEmail(user.getEmail()).isPresent())
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email already exists");
-
-        user.setPassword(encoder.encode(user.getPassword()));
-        return repo.save(user);
+        }
+        // Simple password encoding (not secure, just for demo)
+        user.setPassword("encoded_" + user.getPassword());
+        return userRepository.save(user);
     }
 
+    @Override
     public User findByEmail(String email) {
-        return repo.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("not found"));
+        return userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
